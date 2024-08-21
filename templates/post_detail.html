@@ -1,0 +1,64 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-8">
+            <article>
+                <h2>{{ post.title }}</h2>
+                <p>By {{ post.author.username }} on {{ post.created_at|date:"F d, Y" }}</p>
+                {% if post.image %}
+                    <div class="image-container">
+                        <img src="{{ post.image.url }}" class="img-fluid rounded" alt="{{ post.title }}">
+                    </div>
+                {% endif %}
+                <div>{{ post.content|safe }}</div>
+                {% if user.is_authenticated %}
+                <p>
+                    <a href="{% url 'edit_post' pk=post.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="{% url 'delete_post' pk=post.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                </p>
+                {% endif %}
+            </article>
+        </div>
+        <div class="col-lg-4">
+            <aside>
+                <!-- Latest Posts Section -->
+                <div class="latest-posts mb-4">
+                    <h3 class="section-title mb-3">Latest Posts</h3>
+                    <ul class="list-unstyled">
+                        {% for latest_post in trending_posts %}
+                        <li class="latest-post-item mb-2">
+                            <a href="{% url 'post_detail' pk=latest_post.pk %}" class="d-flex align-items-center">
+                                <div class="post-thumbnail mr-2">
+                                    {% if latest_post.image %}
+                                    <img src="{{ latest_post.image.url }}" class="img-fluid rounded" alt="{{ latest_post.title }}">
+                                    {% else %}
+                                    <img src="{% static 'img/placeholder-thumbnail.jpg' %}" class="img-fluid rounded" alt="No image available">
+                                    {% endif %}
+                                </div>
+                                <div class="post-title">{{ latest_post.title }}</div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+        
+                <!-- Add more sections as needed -->
+                <div class="categories mb-4">
+                    <h3 class="section-title mb-3">Categories</h3>
+                    <ul class="list-group">
+                        {% for category in categories %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{% url 'category_detail' category.pk %}">{{ category.name }}</a>
+                            <span class="badge badge-primary badge-pill">{{ category.posts.count }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </aside>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

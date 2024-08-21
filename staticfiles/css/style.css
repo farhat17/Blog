@@ -1,0 +1,167 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+
+
+
+/* General Body Styling  Login */
+body.login-body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Container Styling */
+.container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading Styling */
+h2 {
+    color: #343a40;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-family: poppins,sans-serif;
+}
+
+/* Form Labels */
+label {
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Form Inputs */
+input.form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 0.75rem;
+    font-size: 1rem;
+}
+
+input.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+/* Button Styling */
+button.btn {
+    background-color: #343a40;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0.75rem;
+    border-radius: 5px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+button.btn:hover {
+    background-color: #495057;
+}
+
+/* Register Link */
+p a {
+    color: #007bff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+/* Alert Styling */
+.alert {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.alert-dismissible .close {
+    position: relative;
+    top: -2px;
+    right: -10px;
+}
+
+
+
+
+/* styling signup page */
+
+
+/* body {
+    background-color: #f8f9fa;
+} */
+.register-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.register-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 700;
+    color: #343a40;
+}
+.form-group label {
+    font-weight: 600;
+    color: #495057;
+}
+.btn-primary {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #007bff;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+.alert {
+    margin-top: 20px;
+}
+p {
+    text-align: center;
+    margin-top: 20px;
+}
+p a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+}
+p a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+/* base html css  */
+
+
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+
+.nav{
+    background-color: red;
+}

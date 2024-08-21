@@ -1,0 +1,28 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2>{{ form.instance.pk|default:"Create" }} Post</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.title.id_for_label }}">Title:</label>
+                {{ form.title }}
+            </div><br>
+            <div class="form-group">
+                <label for="{{ form.content.id_for_label }}">Content:</label>
+                {{ form.content }}
+            </div><br>
+            <div class="form-group">
+                <label for="{{ form.categories.id_for_label }}">Categories:</label>
+                {{ form.categories }}
+            </div>
+            <div class="form-group mt-3 mb-3">
+                <label for="{{ form.image.id_for_label }}">Image:</label>
+                {{ form.image }}
+            </div><br>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+
+{% endblock %}

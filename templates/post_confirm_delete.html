@@ -1,0 +1,12 @@
+<!-- myblogs/templates/myblogs/post_confirm_delete.html -->
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <h2>Delete Post</h2>
+    <p>Are you sure you want to delete "{{ post.title }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirm Delete</button>
+        <a href="{% url 'post_detail' pk=post.pk %}">Cancel</a>
+    </form>
+{% endblock %}
