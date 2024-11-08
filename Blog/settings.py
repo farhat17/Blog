@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-x)#ex5=i0bwr61(%x#nu%25^b$1^m&qhbgt!2zx8yldf)gv3q3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.20.7']
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'myblogs',
      'tinymce',
      'crispy_forms',
+     
 ]
 
 MIDDLEWARE = [
@@ -51,7 +52,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
+
+# Use a session engine if not already configured
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 ROOT_URLCONF = 'Blog.urls'
 
@@ -82,7 +87,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'myblog',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': '123',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -143,7 +148,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
+# TINYMCE_JS_URL = 'https://cdn.tiny.cloud/1/no-api-key/tinymce/7/tinymce.min.js'
+# TINYMCE_COMPRESSOR = False
 
 
 TINYMCE_DEFAULT_CONFIG = {
@@ -161,5 +167,5 @@ TINYMCE_DEFAULT_CONFIG = {
         undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify |
         bullist numlist outdent indent | link image | charmap | preview code | forecolor backcolor
     ''',
-    'content_css': '/path/to/your/custom.css',  # optional: custom CSS file
+    'content_css': '/path/to/your/custom.css', 
 }

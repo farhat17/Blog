@@ -1,113 +1,170 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Your Blog{% endblock %}</title>
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
-    <script type="text/javascript" src="{% static 'tinymce/tinymce.min.js' %}"></script>
-    <script type="text/javascript">
-        tinymce.init({
-            selector: 'textarea',
-            plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-            toolbar_mode: 'floating',
-            setup: function (editor) {
-                editor.on('init', function () {
-                    editor.getBody().style.maxWidth = '100%';
-                });
-            }
-        });
-    </script>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Reporter - HTML Blog Template</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="description" content="This is meta description" />
+  <meta name="author" content="Blog" />
+  <link rel="shortcut icon" href="{%  static 'images/favicon.png' %}" type="image/x-icon" />
+  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon" />
+
+  <!-- theme meta -->
+  <meta name="theme-name" content="reporter" />
+
+  <!-- # Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Neuton:wght@700&family=Work+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- # CSS Plugins -->
+  <link rel="stylesheet" href="{% static 'plugins/bootstrap/bootstrap.min.css' %}" />
+
+  <!-- # Main Style Sheet -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <!-- <link rel="stylesheet" href="{% static 'css/base.css' %}" /> -->
+
+  <script type="text/javascript" src="{% static 'tinymce/tinymce.min.js' %}"></script>
 
 </head>
+
 <body>
-    <!-- Navigation Header -->
-    <header class="header" id="navbar">
-        <div class="container nav-container">
-            <nav class="navbar navbar-expand-lg navbar-light">
-                <a class="navbar-brand" href="{% url 'index' %}">Your Blog</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'index' %}">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
-                        </li>
-                        {% if user.is_authenticated %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'create_post' %}">Create Post</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                            </li>
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'login_user' %}">Login</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </nav>
+  <header class="navigation sticky-top bg-light">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-light px-0">
+        <a class="navbar-brand order-1 py-0" href="{% url 'index' %}">
+          <img loading="prelaod" decoding="async" class="img-fluid" src="{% static 'images/logo.webp'%}"
+            alt="Putaraub.com" />
+        </a>
+        <div class="navbar-actions order-3 ml-0 ml-md-4">
+          <button aria-label="navbar toggler" class="navbar-toggler border-0" type="button" data-toggle="collapse"
+            data-target="#navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
         </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="main">
-        <div class="content container">
-            {% block content %}
-            {% endblock %}
+        <form action="#!" class="search order-lg-3 order-md-2 order-3 ml-auto">
+          <input class="form-control" id="search-query" name="search" type="search" placeholder="Search..." autocomplete="off"  />
+        </form>
+        <div class="collapse navbar-collapse text-center order-lg-2 order-4" id="navigation">
+          <ul class="navbar-nav mx-auto mt-3 mt-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'index' %}">Home</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                Articles
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">Travel</a>
+                <a class="dropdown-item" href="travel.html">Lifestyle</a>
+                <a class="dropdown-item" href="travel.html">Cruises</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'create_post' %}">Create Post</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login_user' %}">Login</a>
+            </li>
+            {% endif %}
+          </ul>
         </div>
-    </main>
+      </nav>
+    </div>
+  </header>
 
-    <!-- Footer -->
-    <footer class="footer py-4">
-        <div class="container text-center">
-            <p>&copy; 2024 Your Blog. All rights reserved.</p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><a href="#">Home</a></li>
-                <li class="list-inline-item"><a href="#">About</a></li>
-                <li class="list-inline-item"><a href="#">Contact</a></li>
-            </ul>
+  <!-- Main Content -->
+  <main class="main">
+    <div class="content container">{% block content %} {% endblock %}</div>
+  </main>
+
+  <footer class="bg-dark mt-5">
+    <div class="container section">
+      <div class="row">
+        <div class="col-lg-10 mx-auto text-center">
+          <a class="d-inline-block mb-4 pb-2" href="{% url 'index' %}">
+            <img loading="prelaod" decoding="async" class="img-fluid" src="images/logo-white.png" alt="PitaraHub" />
+          </a>
+          <ul class="p-0 d-flex navbar-footer mb-0 list-unstyled">
+            <li class="nav-item my-0">
+              <a class="nav-link" href=#">About</a>
+            </li>
+            <li class="nav-item my-0">
+              <a class="nav-link" href="#">Elements</a>
+            </li>
+            <li class="nav-item my-0">
+              <a class="nav-link" href="#">Privacy Policy</a>
+            </li>
+            <li class="nav-item my-0">
+              <a class="nav-link" href="#">Terms Conditions</a>
+            </li>
+            <li class="nav-item my-0">
+              <a class="nav-link" href="#">404 Page</a>
+            </li>
+          </ul>
         </div>
-    </footer>
+      </div>
+    </div>
+    <div class="copyright bg-dark content">
+      Designed &amp; Developed By <a href="#">Blog</a>
+    </div>
+  </footer>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
-    <!-- Custom JavaScript for Navbar -->
-    <script>
-        let lastScrollTop = 0;
-        const navbar = document.getElementById('navbar');
+  <!-- # JS Plugins -->
+  <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'plugins/bootstrap/bootstrap.min.js' %}"></script>
 
-        window.addEventListener('scroll', function() {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop > lastScrollTop) {
-                navbar.style.top = '-70px'; // Adjust this value according to the height of your navbar
-            } else {
-                navbar.style.top = '0';
-            }
-            lastScrollTop = scrollTop;
+  <!-- Main Script -->
+  <script src="{% static 'js/script.js' %}"></script>
+
+  <script type="text/javascript">
+    tinymce.init({
+      selector: "textarea",
+      plugins:
+        "advlist autolink lists link image charmap print preview hr anchor pagebreak insertdatetime media table paste" ,
+      toolbar_mode: "floating",
+      setup: function (editor) {
+        editor.on("init", function () {
+          editor.getBody().style.maxWidth = "100%";
         });
-    </script>
+      },
+    });
+  </script>
+
+  <script>
+    (function () {
+      'use strict';
+      window.addEventListener('load', function () {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function (form) {
+          form.addEventListener('submit', function (event) {
+            if (form.checkValidity() === false) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      }, false);
+    })();
+  </script>
 </body>
+
 </html>

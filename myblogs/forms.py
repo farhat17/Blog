@@ -7,18 +7,30 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ('title', 'content', 'categories', 'image')
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'content': TinyMCE(attrs={'class': 'form-control', 'rows': 15}),  # Adjust rows as needed
-            'categories': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter the title here',
+                'aria-label': 'Post Title'
+            }),
+            'content': TinyMCE(attrs={
+                'class': 'form-control',
+                'rows': 15,
+                'placeholder': 'Write your content here',
+                'aria-label': 'Post Content'
+            }),
+            'categories': forms.CheckboxSelectMultiple(attrs={
+                'class': 'form-check-input',
+                'aria-label': 'Post Categories'
+            }),
+            'image': forms.ClearableFileInput(attrs={
+                'class': 'form-control-file',
+                'aria-label': 'Upload an image',
+                'accept': 'image/*'  
+            }),
         }
 
-class CommentForm(forms.ModelForm):
-    class Meta:
-        model=Comment
-        fields = ['author_name', 'author_email', 'content']
 
-class ProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['bio', 'profile_picture']
+class CommentForm(forms.Form):
+   name = forms.CharField(max_length=100)
+   email = forms.EmailField()
+   content = forms.CharField()

@@ -1,0 +1,432 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.navbar-nav .nav-link {
+    font-family: raleway;
+    font-weight: 600;
+    color: #555 !important;
+    transition: color 0.3s ease-in-out;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #007bff !important;
+}
+
+.header {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: top 0.3s;
+}
+
+.main {
+    margin-top:50px;
+    padding-top: 100px; /* Adjust this padding to prevent content from hiding behind the navbar */
+    padding-bottom: 40px;
+}
+
+.footer {
+    background-color: #222;
+    color: #ccc;
+}
+
+.footer p, .footer a {
+    color: #ccc;
+    font-size: 0.875rem;
+}
+
+.footer a:hover {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.footer ul {
+    padding-left: 0;
+    list-style: none;
+}
+
+.footer ul li {
+    display: inline;
+    margin-right: 15px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.container.nav-container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.hero{
+    color:white;
+}
+.hero h1,p{
+    color:black;
+}
+.hero a{
+    color:black;
+}
+.hero h1{
+    font-family: raleway;
+    font-size: 3rem;
+    font-weight:400;
+}
+
+.hero p{
+    font-size:16px;
+    padding-left:10px;
+    text-transform: capitalize;
+}
+
+
+.featured-posts h2{
+    text-align:center;
+    font-family: raleway;
+    text-decoration: underline;
+    
+}
+.trending-posts h2{
+    text-align:center;
+    font-family: raleway;
+    text-decoration: underline;
+}
+
+
+.content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    object-fit: contain;
+}
+.image-container {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+    width: auto;
+    max-height: 100%;
+}
+.image-container {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+}
+
+
+
+/* Sidebar Styles */
+aside {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #343a40;
+    border-bottom: 2px solid #343a40;
+    padding-bottom: 8px;
+    font-family: raleway;
+}
+
+.latest-post-item a {
+    text-decoration: none;
+    color: #343a40;
+    transition: all 0.3s ease;
+}
+
+.latest-post-item a:hover .post-title {
+    color: #548ac4;
+    font-weight: bold;
+}
+
+.post-thumbnail img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}
+
+.list-group-item {
+    background-color: transparent;
+    border: none;
+    padding-left: 0;
+}
+
+.list-group-item a {
+    text-decoration: none;
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+
+.list-group-item a:hover {
+    color: #0056b3;
+}
+
+.badge-primary {
+    background-color: #007bff;
+}
+
+
+
+/* responsive */
+@media (max-width: 991.98px) {
+    .col-md-8, .col-md-4 {
+        padding: 15px;
+    }
+
+    .col-md-8 article h2 {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .col-md-8, .col-md-4 {
+        padding: 10px;
+    }
+
+    .col-md-8 article h2 {
+        font-size: 1.5rem;
+    }
+
+    .col-md-8 article p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .col-md-8, .col-md-4 {
+        padding: 5px;
+    }
+
+    .col-md-8 article h2 {
+        font-size: 1.25rem;
+    }
+
+    .col-md-8 article p {
+        font-size: 0.85rem;
+    }
+}
+
+
+
+/* Ensure the sidebar container takes full height */
+.sidebar-container {
+    position: -webkit-sticky; 
+    position: sticky;
+    top: 0; 
+    height: 100vh; 
+}
+
+/* Optional: add some styling to the sidebar */
+.sidebar-container aside {
+    background-color: #f8f9fa; 
+    padding: 15px; 
+    border-radius: 5px; 
+}
+
+
+ /* Styling for the categories sidebar */
+.categories-sidebar {
+    background-color: #f8f9fa; 
+    border: 1px solid #dee2e6; 
+    border-radius: 8px; 
+    padding: 15px; 
+    box-sizing: border-box; 
+    
+}
+.categories-sidebar .container {
+    max-width: 100%; 
+    margin: auto; 
+}
+.categories-sidebar h3 {
+    color: #343a40; 
+    font-size: 1.5rem; 
+    font-weight: 500; 
+    margin-bottom: 1rem; 
+}
+
+/* Card deck for responsive layout */
+.card-deck {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem; 
+}
+
+.card {
+    flex: 1 1 calc(33.333% - 1rem); 
+    display: flex;
+    flex-direction: column; 
+    border: 1px solid #dee2e6; 
+    border-radius: 8px; 
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); 
+    overflow: hidden; 
+    max-width: 100%; 
+}
+
+.card-img-top {
+    width: 100%; 
+    height: 10px;
+    object-fit:cover;
+    object-position: center; 
+}
+
+.card-body {
+    padding: 1rem; 
+    flex: 1; 
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between; 
+}
+
+.card-title {
+    font-size: 1.25rem; 
+    margin-bottom: 0.5rem; 
+}
+
+.card-text {
+    font-size: 0.875rem; 
+    margin-bottom: 1rem; 
+    flex: 1; 
+}
+
+.btn-primary {
+    background-color: #007bff; 
+    border: none; /* Remove border */
+    padding: 0.5rem 1rem; 
+    border-radius: 5px; 
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .card-deck {
+        flex-direction: column; 
+    }
+
+    .card {
+        flex: 1 1 100%; 
+    }
+
+    .card-img-top {
+        height: 150px; 
+    }
+
+    .card-title {
+        font-size: 1.125rem; 
+    }
+
+    .card-text {
+        font-size: 0.8rem; 
+    }
+}
+
+
+.post-list{
+    text-decoration: none;
+}
+
+.share-buttons a {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 50%;
+    font-size: 20px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.btn-success {
+    background-color: #25D366; /* WhatsApp green */
+}
+
+.btn-success:hover {
+    background-color: #128C7E; /* WhatsApp dark green */
+}
+
+.btn-info {
+    background-color: #1DA1F2; /* Twitter blue */
+}
+
+.btn-info:hover {
+    background-color: #0d95e8; /* Twitter dark blue */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Facebook/LinkedIn blue */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue */
+}
+
+.btn-secondary {
+    background-color: #6c757d; /* Email grey */
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268; /* Darker grey */
+}
+
+.fa {
+    margin: 0;
+}
+
+/* like and dislike */
+.reaction-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reaction-buttons a {
+    color: #333;
+    font-size: 20px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.reaction-buttons a:hover {
+    color: #007bff; /* Change color on hover */
+}
+
+.reaction-buttons .fas {
+    margin-right: 5px;
+}

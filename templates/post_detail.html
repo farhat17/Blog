@@ -1,64 +1,242 @@
 {% extends 'layouts/base.html' %}
-{% load static %}
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-md-8">
-            <article>
-                <h2>{{ post.title }}</h2>
-                <p>By {{ post.author.username }} on {{ post.created_at|date:"F d, Y" }}</p>
-                {% if post.image %}
-                    <div class="image-container">
-                        <img src="{{ post.image.url }}" class="img-fluid rounded" alt="{{ post.title }}">
-                    </div>
+<main>
+  <section class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mb-5 mb-lg-0">
+          <article>
+
+            {% if post.image %}
+            <img loading="lazy" decoding="async" src="{{post.image.url}}" alt="{{post.title}}" class="w-100">
+            {% else %}
+            <img loading="lazy" decoding="async" src="" alt="{{post.title}}" class="w-100">
+
+            {% endif %}
+
+            <ul class="post-meta mb-2 mt-4">
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  style="margin-right:5px;margin-top:-4px" class="text-dark" viewBox="0 0 16 16">
+                  <path d="M5.5 10.5A.5.5 0 0 1 6 10h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5z" />
+                  <path
+                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
+                  <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
+                </svg><span>{{post.author.username}}</span>&nbsp<span>{{post.created_at|date:"F d, Y"}}</span>
+              </li>
+
+            </ul>
+            <ul class="post-meta mb-4">
+              <li> <a href="">{{post.category.name}}</a>
+              </li>
+            </ul>
+            <h1 class="my-3">{{post.title|safe}}</h1>
+            <hr>
+            <div class="content text-left">
+
+              <p>{{post.content|safe}}</p>
+
+              <hr>
+
+              {% if user.is_authenticated %}
+                <div class="p-1">
+                    <a href="{% url 'edit_post' slug=post.slug %}" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="{% url 'delete_post' slug=post.slug %}" class="btn btn-sm btn-danger">Delete</a>
+                </div>
                 {% endif %}
-                <div>{{ post.content|safe }}</div>
-                {% if user.is_authenticated %}
-                <p>
-                    <a href="{% url 'edit_post' pk=post.pk %}" class="btn btn-sm btn-primary">Edit</a>
-                    <a href="{% url 'delete_post' pk=post.pk %}" class="btn btn-sm btn-danger">Delete</a>
-                </p>
-                {% endif %}
-            </article>
+
+                <div class="reaction-buttons mb-4">
+                  <p>Likes: {{ like_count }} | Dislikes: {{ dislike_count }}</p>
+                  <a href="{% url 'react_to_post' post.slug 'like' %}" class="btn btn-outline-primary btn-sm me-2" title="Like">
+                    <i class="fas fa-thumbs-up"></i>
+                  </a>
+                  <a href="{% url 'react_to_post' post.slug 'dislike' %}" class="btn btn-outline-danger btn-sm" title="Dislike">
+                    <i class="fas fa-thumbs-down"></i>
+                  </a>
+                </div>
+        
+                <!-- Social Share Buttons -->
+                <div class="share-buttons d-flex flex-wrap gap-2 mb-4">
+                  <a
+                    href="https://api.whatsapp.com/send?text={{ post.title|urlencode }}%20{{ post.content|striptags|slice:':200'|urlencode }}%20{{ request.build_absolute_uri|urlencode }}%20Read%20more%20here:%20{{ request.build_absolute_uri|urlencode }}"
+                    target="_blank" class="btn btn-success me-2" title="Share on WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                  </a>
+                  <a
+                    href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ post.title }}%20{{ post.content|striptags|slice:':200'|urlencode }}"
+                    target="_blank" class="btn btn-info me-2" title="Share on Twitter">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                  <a
+                    href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}%20{{ post.content|striptags|slice:':200'|urlencode }}"
+                    target="_blank" class="btn btn-primary me-2" title="Share on Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ post.title }}%20{{ post.content|striptags|slice:':200'|urlencode }}"
+                    target="_blank" class="btn btn-primary me-2" title="Share on LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                  </a>
+                  <a
+                    href="mailto:?subject={{ post.title }}&body={{ request.build_absolute_uri }}"
+                    class="btn btn-secondary" title="Share via Email">
+                    <i class="fas fa-envelope"></i>
+                  </a>
+                </div>
+
+              <!--               
+              <h2 id="youtube-video">Youtube video</h2>
+              <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                <iframe src="https://www.youtube-nocookie.com/embed/DDpXdljhstg"
+                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen
+                  title="YouTube Video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>
+              </div>
+            </div> -->
+          </article>
+
         </div>
         <div class="col-lg-4">
-            <aside>
-                <!-- Latest Posts Section -->
-                <div class="latest-posts mb-4">
-                    <h3 class="section-title mb-3">Latest Posts</h3>
-                    <ul class="list-unstyled">
-                        {% for latest_post in trending_posts %}
-                        <li class="latest-post-item mb-2">
-                            <a href="{% url 'post_detail' pk=latest_post.pk %}" class="d-flex align-items-center">
-                                <div class="post-thumbnail mr-2">
-                                    {% if latest_post.image %}
-                                    <img src="{{ latest_post.image.url }}" class="img-fluid rounded" alt="{{ latest_post.title }}">
-                                    {% else %}
-                                    <img src="{% static 'img/placeholder-thumbnail.jpg' %}" class="img-fluid rounded" alt="No image available">
-                                    {% endif %}
-                                </div>
-                                <div class="post-title">{{ latest_post.title }}</div>
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
+          <div class="widget-blocks">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="widget">
+                  <div class="widget-body">
+                    <img loading="lazy" decoding="async" src="{{ post.author.profile_image.url }}" alt="About Me"
+                      class="w-100 author-thumb-sm d-block">
+                    <h1>{{ post.author|safe }}</h1>
+                    <!-- <h2 class="widget-title my-3">{{post.author.name}}</h2> -->
+                    <p class="mb-3 pb-2">{{ post.author.bio|safe }}</p> <a href="about.html"
+                      class="btn btn-sm btn-outline-primary">Know
+                      More</a>
+                  </div>
                 </div>
-        
-                <!-- Add more sections as needed -->
-                <div class="categories mb-4">
-                    <h3 class="section-title mb-3">Categories</h3>
-                    <ul class="list-group">
-                        {% for category in categories %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="{% url 'category_detail' category.pk %}">{{ category.name }}</a>
-                            <span class="badge badge-primary badge-pill">{{ category.posts.count }}</span>
-                        </li>
-                        {% endfor %}
-                    </ul>
+              </div>
+              <div class="col-lg-12 col-md-6">
+                <div class="widget">
+                  <h2 class="section-title mb-3">Recommended</h2>
+                  <div class="widget-body">
+
+                    <div class="widget-list">
+                      {% for post in trending_posts %}
+                      <article class="card mb-4">
+                        <div class="card-image">
+                          <div class="post-info"> <span class="text-uppercase">1 minutes read</span>
+                          </div>
+
+                          {% if post.image %}
+                          <img loading="lazy" decoding="async" src="{{post.image.url}}" alt="Post Thumbnail"
+                            class="w-100">
+                          {% else %}
+                          <img loading="lazy" decoding="async" src="images/post/post-2.jpg" alt="Post Thumbnail"
+                            class="w-100">
+
+                          {% endif %}
+
+                        </div>
+                        <div class="card-body px-0 pb-1">
+                          <h3><a class="post-title post-title-sm"
+                              href="{% url 'post_detail' post.slug %}">{{post.title}}</a></h3>
+                          <p class="card-text">{{post.content|truncatewords:20|safe}}</p>
+                          <div class="content"> <a class="read-more-btn" href="{% url 'post_detail' post.slug %}">Read
+                              Full Article</a>
+                          </div>
+                        </div>
+                      </article>
+                      {% endfor %}
+
+                      {% for post in posts %}
+                      <a class="media align-items-center" href="article.html">
+
+                        {% if post.image %}
+                        <img loading="lazy" decoding="async" src="{{post.image.url}}" alt="{{post.image}}"
+                          class="w-100">
+                        {% else %}
+                        <img loading="lazy" decoding="async" src="images/post/post-2.jpg" alt="{{post.title}}"
+                          class="w-100">
+                        {% endif %}
+
+                        <div class="media-body ml-3">
+                          <h3 style="margin-top:-5px">{{post.title|safe}}</h3>
+                          <p class="mb-0 small">{{post.content|safe|truncatewords:20}}</p>
+                        </div>
+                      </a>
+
+
+                    </div>
+                    {% endfor %}
+                  </div>
                 </div>
-            </aside>
+              </div>
+              <div class="col-lg-12 col-md-6">
+                <div class="widget">
+                  <h2 class="section-title mb-3">Categories</h2>
+                  <div class="widget-body">
+                    <ul class="widget-list">
+
+                      {% for category in categories %}
+
+                      <li><a href="{% url 'category_detail' slug=category.slug %}">{{category.name}}<span
+                            class="ml-auto"></span></a>
+                      </li>
+                      {% endfor %}
+
+
+
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        
+      </div>
     </div>
-</div>
+  </section>
+
+  <script>
+    $(document).ready(function () {
+      // Handle reaction button clicks
+      $('.reaction-btn').on('click', function () {
+        const reactionType = $(this).data('reaction');
+        const postSlug = "{{ post.slug }}";  // Pass the post slug dynamically
+  
+        $.ajax({
+          url: "{% url 'react_to_post' slug=post.slug reaction_type='REACT_TYPE' %}".replace('REACT_TYPE', reactionType),
+          type: 'POST',
+          data: {
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+          },
+          success: function (response) {
+            // Update the reaction counts dynamically
+            updateReactionCounts(response);
+          },
+          error: function (xhr, status, error) {
+            console.log('Error:', error);
+            alert('There was an error processing your reaction. Please try again.');
+          }
+        });
+      });
+  
+      // Function to update reaction buttons and counts dynamically
+      function updateReactionCounts(data) {
+        // Update the reaction count for each reaction type
+        $('.reaction-btn').each(function () {
+          const reactionType = $(this).data('reaction');
+          $(this).find('.reaction-count').text(data[reactionType + '_count']);
+          
+          // Disable the button if the user reacted with this type
+          if (data.current_reaction === reactionType) {
+            $(this).prop('disabled', true); // Disable the button if already reacted
+          } else {
+            $(this).prop('disabled', false); // Enable the button if not reacted
+          }
+        });
+      }
+    });
+  </script>
+  
+</main>
+
 {% endblock %}

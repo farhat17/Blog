@@ -1,120 +1,163 @@
-{% extends 'layouts/base.html' %}
-{% load static %}
-
+{% extends 'layouts/base.html'%}
 {% block content %}
-<!-- Hero Section -->
-
-<link rel="stylesheet" href="{% static 'css/base.css' %}">
-<section class="hero text-light py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 text-center text-lg-left animate__animated animate__fadeInLeft">
-                <h1 class="display-4 mb-4">Welcome to Our Blog</h1>
-                <p class="lead">Explore insightful articles on various topics. Read And Write What Matters</p>
-                {% if user.is_authenticated %}
-                    <a href="{% url 'create_post' %}" class="btn btn-primary mr-2 mb-2 animate__animated animate__fadeInUp animate__delay-1s">Create New Post</a>
-                {% else %}
-                    <a href="{% url 'signup' %}" class="btn btn-outline-dark mr-2 mb-2 animate__animated animate__fadeInUp animate__delay-1s">Sign Up</a>
-                    <a href="{% url 'login_user' %}" class="btn btn-outline-dark mb-2 animate__animated animate__fadeInUp animate__delay-1s">Log In</a>
-                {% endif %}
-            </div>
-            <div class="col-lg-6 text-center">
-                <img src="{% static 'img/hero-image.jpg' %}" class="img-fluid rounded animate__animated animate__fadeInRight" alt="Hero Image">
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Featured Posts -->
-<section class="featured-posts py-5">
-    <div class="container">
-        <h2 class="mb-4 text-center animate__animated animate__fadeIn">Featured Posts</h2>
+<section class="section">
+  <div class="container">
+    <div class="row no-gutters-lg">
+      <div class="col-12">
+        <h2 class="section-title">Latest Articles</h2>
+      </div>
+      <div class="col-lg-8 mb-5 mb-lg-0">
         <div class="row">
-            {% for post in posts %}
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card shadow-sm h-100 animate__animated animate__zoomIn">
-                    {% if post.image %}
-                        <img src="{{ post.image.url }}" class="card-img-top img-fluid rounded" alt="{{ post.title }}">
-                    {% else %}
-                        <img src="{% static 'img/placeholder-image.jpg' %}" class="card-img-top img-fluid rounded" alt="No image available">
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <p class="card-text">{{ post.content|truncatechars_html:150|safe }}</p>
-                        <a href="{% url 'post_detail' post.pk %}" class="btn btn-outline-primary btn-sm">Read More</a>
-                    </div>
+          {% for single_post in single_post %}
+          <div class="col-12 mb-4">
+            <article class="card article-card">
+              <a href="{% url 'post_detail' single_post.slug %}">
+                <div class="card-image">
+                  <div class="post-info">
+                    <span class="text-uppercase">{{ single_post.created_at }}</span>
+                    <span class="text-uppercase">{{ single_post.read_time }} minutes read</span>
+                  </div>
+                  {% if single_post.image %}
+                  <img loading="lazy" decoding="async" src="{{ single_post.image.url }}" alt="{{ single_post.title }}"
+                    class="w-100">
+                  {% else %}
+                  <img loading="lazy" decoding="async" src="path/to/default/image.jpg" alt="Default Thumbnail"
+                    class="w-100">
+                  {% endif %}
                 </div>
+              </a>
+              <div class="card-body px-0 pb-1">
+                <ul class="post-meta mb-2">
+                  <li>
+                    {% for category in single_post.categories.all %}
+                    <a href="{% url 'category_detail' category.slug %}">{{ category.name }}</a>
+                    {% endfor %}
+                  </li>
+                </ul>
+                <h2 class="h1"><a class="post-title" href="">{{single_post.title }}</a></h2>
+                <p class="card-text">{{ single_post.content|truncatewords:20|safe }}</p>
+                <div class="content"><a class="read-more-btn" href="{% url 'post_detail' single_post.slug %}">Read Full
+                    Article</a></div>
+              </div>
+            </article>
+          </div>
+
+          {% endfor %}
+
+          {% for post in posts %}
+          <div class="col-md-6 mb-4">
+            <article class="card article-card article-card-sm h-100">
+              <a href="article.html">
+                <div class="card-image">
+                  <div class="post-info">
+                    <span class="text-uppercase">{{ post.created_at }}</span>
+                    <span class="text-uppercase">{{ post.read_time }} minutes read</span>
+                  </div>
+                  {% if post.image %}
+                  <img loading="lazy" decoding="async" src="{{ post.image.url }}" alt="{{ post.title }}" class="w-100">
+                  {% else %}
+                  <img loading="lazy" decoding="async" src="path/to/default/image.jpg" alt="Default Thumbnail"
+                    class="w-100">
+                  {% endif %}
+                </div>
+              </a>
+              <div class="card-body px-0 pb-0">
+                <ul class="post-meta mb-2">
+                  <li>
+                    {% for category in post.categories.all %}
+                    <a href="#!">{{ category.name }}</a>
+                    {% endfor %}
+                  </li>
+                </ul>
+                <h2><a class="post-title" href="article.html">{{ post.title }}</a></h2>
+                <p class="card-text">{{post.content|truncatewords:20|safe}}</p>
+                <div class="content"><a class="read-more-btn" href="{% url 'post_detail' post.slug %}">Read Full
+                    Article</a></div>
+              </div>
+            </article>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="col-12">
+          <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+              <li class="page-item"><a class="page-link" href="#!" aria-label="Previous"><span
+                    aria-hidden="true">&laquo;</span></a></li>
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#!" aria-label="Next"><span
+                    aria-hidden="true">&raquo;</span></a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="widget-blocks">
+          <div class="row">
+            {% for spost in spost %}
+            <div class="col-lg-12">
+              <div class="widget">
+                <div class="widget-body">
+                  <img loading="lazy" decoding="async" src="{{spost.image.url}}" alt="{{author.name}}'s Profile Picture"
+                  class="w-100 author-thumb-sm d-block">
+                  <h2 class="widget-title my-3">{{spost.title|safe}}</h2>
+                  <p class="mb-3 pb-2">{{spost.content|truncatewords:10|safe}}</p>
+                  <a href="about.html" class="btn btn-sm btn-outline-primary">Know More</a>
+                </div>
+              </div>
             </div>
             {% endfor %}
-        </div>
-    </div>
-</section>
+            <div class="col-lg-12 col-md-6">
+              <div class="widget">
+                <h2 class="section-title mb-3">Recommended</h2>
+                <div class="widget-body">
+                  <div class="widget-list">
+                    {% for trending in trending_posts %}
+                    <article class="card mb-4">
+                      <div class="card-image">
+                        <div class="post-info">
+                          <span class="text-uppercase">05 minutes read</span>
+                        </div>
 
-<!-- Trending Posts -->
-<section class="trending-posts py-5 bg-light">
-    <div class="container">
-        <h2 class="mb-4 text-center animate__animated animate__fadeIn">Trending Posts</h2>
-        <div class="row">
-            {% for post in trending_posts %}
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card shadow-sm h-100 animate__animated animate__fadeInUp">
-                    {% if post.image %}
-                        <img src="{{ post.image.url }}" class="card-img-top img-fluid rounded" alt="{{ post.title }}">
-                    {% else %}
-                        <img src="{% static 'img/placeholder-image.jpg' %}" class="card-img-top img-fluid rounded" alt="No image available">
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <p class="card-text">{{ post.content|truncatechars_html:150|safe }}</p>
-                        <a href="{% url 'post_detail' post.pk %}" class="btn btn-outline-primary btn-sm">Read More</a>
-                    </div>
+                        {% if trending.image %}
+
+                        <img loading="lazy" decoding="async" src="{{ trending.image.url }}"
+                          alt="{{trending.title}}" class="w-100">
+                        {% else %}
+                        <img loading="lazy" decoding="async" src="path/to/default/image.jpg" alt="{{trending.title}}"
+                          class="w-100">
+                        {% endif %}
+                      </div>
+                      <div class="card-body px-0 pb-1">
+                        <h3><a class="post-title post-title-sm" href="{% url 'post_detail' trending.slug %}">{{trending.title|safe }}</a></h3>
+                        <p class="card-text">{{ trending.content|truncatewords:10|safe }}</p>
+                        <div class="content"><a class="read-more-btn"
+                            href="{% url 'post_detail' trending.slug %}">Read Full Article</a></div>
+                      </div>
+                    </article>
+                    {% endfor %}
+                  </div>
                 </div>
+              </div>
             </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<!-- Additional Blog Sections -->
-<section class="additional-posts py-5">
-    <div class="container">
-        <h2 class="mb-4 text-center animate__animated animate__fadeIn">More Articles</h2>
-        <div class="row">
-            {% for post in additional_posts %}
-            <div class="col-lg-3 col-md-4 mb-4">
-                <div class="card shadow-sm h-100 animate__animated animate__zoomIn">
-                    {% if post.image %}
-                        <img src="{{ post.image.url }}" class="card-img-top img-fluid rounded" alt="{{ post.title }}">
-                    {% else %}
-                        <img src="{% static 'img/placeholder-image.jpg' %}" class="card-img-top img-fluid rounded" alt="No image available">
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <p class="card-text">{{ post.content|truncatechars_html:100|safe }}</p>
-                        <a href="{% url 'post_detail' post.pk %}" class="btn btn-outline-primary btn-sm">Read More</a>
-                    </div>
+            <div class="col-lg-12 col-md-6">
+              <div class="widget">
+                <h2 class="section-title mb-3">Categories</h2>
+                <div class="widget-body">
+                  <ul class="widget-list">
+                    {% for category in categories %}
+                    <li><a href="{% url 'category_detail' category.slug %}">{{category.name}}<span class="ml-auto">(
+                          {{category.post_set.count }})</span></a>
+                    </li>
+                    {% endfor %}
+                  </ul>
                 </div>
+              </div>
             </div>
-            {% endfor %}
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </section>
-
-<!-- Categories Sidebar -->
-<aside class="categories-sidebar py-5 bg-light">
-    <div class="container">
-        <h3 class="mb-4 animate__animated animate__fadeInLeft">Categories</h3>
-        <ul class="list-group animate__animated animate__fadeInUp">
-            {% for category in categories %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <a href="{% url 'category_detail' category.pk %}">{{ category.name }}</a>
-                <span class="badge badge-primary badge-pill">{{ category.posts.count }}</span>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-</aside>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
 {% endblock %}

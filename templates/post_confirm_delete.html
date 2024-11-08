@@ -7,6 +7,6 @@
     <form method="post">
         {% csrf_token %}
         <button type="submit">Confirm Delete</button>
-        <a href="{% url 'post_detail' pk=post.pk %}">Cancel</a>
+        <a href="{% url 'post_detail' slug=post.slug %}">Cancel</a>
     </form>
 {% endblock %}

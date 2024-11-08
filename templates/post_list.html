@@ -1,0 +1,120 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid mt-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <aside class="col-md-4 col-lg-3 mb-4">
+            <div class="latest-posts mb-4">
+                <h3 class="section-title mb-3">Latest Posts</h3>
+                <ul class="list-unstyled">
+                    {% for latest_post in trending_posts %}
+                    <li class="latest-post-item mb-2">
+                        <a href="{% url 'post_detail' slug=latest_post.slug %}" class="d-flex align-items-center">
+                            <div class="post-thumbnail mr-2">
+                                {% if latest_post.image %}
+                                <img src="{{ latest_post.image.url }}" class="img-fluid rounded" alt="{{ latest_post.title }}">
+                                {% else %}
+                                <img src="{% static 'img/placeholder-thumbnail.jpg' %}" class="img-fluid rounded" alt="No image available">
+                                {% endif %}
+                            </div>
+                            <div class="post-title">{{ latest_post.title }}</div>
+                        </a>
+                    </li>
+                    {% empty %}
+                        <li>No Posts available.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+             <!-- AdSense Ad Unit -->
+             <div class="ad mb-4">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <script>
+                  (adsbygoogle = window.adsbygoogle || []).push({
+                    google_ad_client: "YOUR-AD-CLIENT-ID",
+                    enable_page_level_ads: true
+                  });
+                </script>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="col-md-8 col-lg-9">
+            <h1 class="mb-4 text-primary">Post List</h1>
+            <hr>
+            <div class="post-list d-flex flex-column">
+                {% for post in posts %}
+                    <div class="card mb-4 shadow-sm">
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <a href="{% url 'post_detail' slug=post.slug %}" class="text-decoration-none text-dark">
+                                <h2 class="card-title">{{ post.title|safe }}</h2>
+                            </a>
+                            <p class="card-text">{{ post.content|safe }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">By {{ post.author|safe }} on {{ post.created_at }}</small>
+                                <span class="badge bg-secondary">{{ post.category.name }}</span>
+                            </div>
+                            {% if user.is_superuser %}
+                                <div class="btn-group mt-3">
+                                    <a href="{% url 'approve_post' post.slug %}" class="btn btn-success btn-sm">Approve</a>
+                                    <a href="{% url 'disapprove_post' post.slug %}" class="btn btn-danger btn-sm">Disapprove</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="alert alert-info text-center">No posts available.</div>
+                {% endfor %}
+            </div>
+
+             <!-- AdSense Ad Unit -->
+             <div class="ad mb-4">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <script>
+                  (adsbygoogle = window.adsbygoogle || []).push({
+                    google_ad_client: "YOUR-AD-CLIENT-ID",
+                    enable_page_level_ads: true
+                  });
+                </script>
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+    .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    .card-img-top {
+        height: 180px;
+        object-fit: cover;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        color: #333;
+        transition: color 0.3s ease;
+    }
+
+    .card-title:hover {
+        color: #007bff;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        color: #555;
+    }
+
+    .btn-group .btn {
+        margin-right: 0.5rem;
+    }
+</style>
+
+{% endblock %}
