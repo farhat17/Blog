@@ -45,15 +45,18 @@
                 </div>
                 {% endif %}
 
-                <div class="reaction-buttons mb-4">
-                  <p>Likes: {{ like_count }} | Dislikes: {{ dislike_count }}</p>
-                  <a href="{% url 'react_to_post' post.slug 'like' %}" class="btn btn-outline-primary btn-sm me-2" title="Like">
-                    <i class="fas fa-thumbs-up"></i>
-                  </a>
-                  <a href="{% url 'react_to_post' post.slug 'dislike' %}" class="btn btn-outline-danger btn-sm" title="Dislike">
-                    <i class="fas fa-thumbs-down"></i>
-                  </a>
+                <div class="reaction-buttons">
+                  <button class="reaction-btn" data-reaction="like">
+                    👍 Like <span class="reaction-count">0</span>
+                  </button>
+                  <button class="reaction-btn" data-reaction="dislike">
+                    👎 Dislike <span class="reaction-count">0</span>
+                  </button>
+                  <button class="reaction-btn" data-reaction="love">
+                    ❤️ Love <span class="reaction-count">0</span>
+                  </button>
                 </div>
+                
         
                 <!-- Social Share Buttons -->
                 <div class="share-buttons d-flex flex-wrap gap-2 mb-4">
@@ -194,7 +197,48 @@
       </div>
     </div>
   </section>
-
+  <script>
+    $(document).ready(function () {
+      // Handle reaction button clicks
+      $('.reaction-btn').on('click', function () {
+        const reactionType = $(this).data('reaction');
+        const postSlug = "{{ post.slug }}";  // Pass the post slug dynamically
+  
+        $.ajax({
+          url: "{% url 'react_to_post' slug=post.slug reaction_type='REACT_TYPE' %}".replace('REACT_TYPE', reactionType),
+          type: 'POST',
+          data: {
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+          },
+          success: function (response) {
+            // Update the reaction counts dynamically
+            updateReactionCounts(response);
+          },
+          error: function (xhr, status, error) {
+            console.log('Error:', error);
+            alert('There was an error processing your reaction. Please try again.');
+          }
+        });
+      });
+  
+      // Function to update reaction buttons and counts dynamically
+      function updateReactionCounts(data) {
+        // Update the reaction count for each reaction type
+        $('.reaction-btn').each(function () {
+          const reactionType = $(this).data('reaction');
+          $(this).find('.reaction-count').text(data[reactionType + '_count']);
+          
+          // Disable the button if the user reacted with this type
+          if (data.current_reaction === reactionType) {
+            $(this).prop('disabled', true); // Disable the button if already reacted
+          } else {
+            $(this).prop('disabled', false); // Enable the button if not reacted
+          }
+        });
+      }
+    });
+  </script>
+  
   <script>
     $(document).ready(function () {
       // Handle reaction button clicks
