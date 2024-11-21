@@ -267,7 +267,7 @@ def react_to_post(request, slug, reaction_type):
         for reaction in dict(PostReaction.REACTION_CHOICES).keys()
     }
 
-    # Return the updated counts and current reaction
+    
     response_data = {
         'like_count': reaction_counts.get('like', 0),
         'dislike_count': reaction_counts.get('dislike', 0),
@@ -284,30 +284,39 @@ def react_to_post(request, slug, reaction_type):
 @user_passes_test(is_superuser)
 def approve_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    if request.user.is_superuser:  # Ensure only admin can approve
+    if request.user.is_superuser:  
         post.approved = True
         post.save()
         return redirect('post_list')
     else:
-        return redirect('no_permission')  # Redirect to a permission error page
+        return redirect('no_permission')  
 
 @login_required
 @user_passes_test(is_superuser)
 def disapprove_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    if request.user.is_superuser:  # Ensure only admin can disapprove
+    if request.user.is_superuser:  
         post.approved = False
         post.save()
         return redirect('post_list')
     else:
-        return redirect('no_permission')  # Redirect to a permission error page
+        return redirect('no_permission')  
     
     
     
 def post_list(request):
-        posts = Post.objects.filter(approved=True)  # Only show approved posts
+        posts = Post.objects.filter(approved=True)  
         trending_posts = Post.objects.order_by('-views')[:1]
-        return render(request, 'post_list.html', {'posts': posts,'trending_posts':trending_posts})
+        sposts = Post.objects.all().order_by('-views')[:2]
+        categories = Category.objects.all()
+        
+        context = {
+            'posts': posts,
+            'trending_posts':trending_posts,
+            'sposts':sposts,
+            'categories':categories
+            }
+        return render(request, 'post_list.html',context )
     
     
     

@@ -1,120 +1,155 @@
 {% extends 'layouts/base.html' %}
-{% load static %}
 {% block content %}
-<div class="container-fluid mt-5">
-    <div class="row">
-        <!-- Sidebar -->
-        <aside class="col-md-4 col-lg-3 mb-4">
-            <div class="latest-posts mb-4">
-                <h3 class="section-title mb-3">Latest Posts</h3>
-                <ul class="list-unstyled">
+{% load static %}
+<section class="section">
+  <div class="container">
+    <div class="row no-gutters-lg">
+      <div class="col-12">
+        <h2 class="section-title">Latest Posts</h2>
+      </div>
+
+      <div class="col-lg-8 mb-5 mb-lg-0">
+        <div class="row">
+          <!-- Main Articles Loop -->
+          {% for post in posts %}
+          <div class="col-md-6 mb-4">
+            <article class="card article-card">
+              <a href="{% url 'post_detail' post.slug %}">
+                <div class="card-image">
+                  <div class="post-info">
+                    <span class="text-uppercase">{{ post.created_at }}</span>
+                    <span class="text-uppercase">{{ post.read_time }} minutes read</span>
+                  </div>
+                  {% if post.image %}
+                  <img loading="lazy" decoding="async" src="{{ post.image.url }}" alt="{{ post.title }}" class="w-100">
+                  {% else %}
+                  <img loading="lazy" decoding="async" src="{% static 'img/default-image.jpg' %}" alt="Default Thumbnail" class="w-100">
+                  {% endif %}
+                </div>
+              </a>
+              <div class="card-body px-0 pb-1">
+                <ul class="post-meta mb-2">
+                  <li>
+                    {% for category in post.categories.all %}
+                    <a href="{% url 'category_detail' category.slug %}">{{ category.name }}</a>
+                    {% endfor %}
+                  </li>
+                </ul>
+                <h2 class="h1"><a class="post-title" href="{% url 'post_detail' post.slug %}">{{ post.title }}</a></h2>
+                <p class="card-text">{{ post.content|truncatewords:20|safe }}</p>
+                <div class="content"><a class="read-more-btn" href="{% url 'post_detail' post.slug %}">Read Full Article</a></div>
+              </div>
+            </article>
+          </div>
+          {% empty %}
+          <div class="alert alert-info text-center">No posts available.</div>
+          {% endfor %}
+
+            <!-- AdSense Ad Unit -->
+            <div class="ad mb-4">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <script>
+                  (adsbygoogle = window.adsbygoogle || []).push({
+                    google_ad_client: "YOUR-AD-CLIENT-ID",
+                    enable_page_level_ads: true
+                  });
+                </script>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="col-12">
+          <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+              <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <div class="widget-blocks">
+          <div class="row">
+            <!-- Latest Posts Widget -->
+            <div class="col-lg-12">
+              <div class="widget">
+                <h2 class="section-title mb-3">Trending Posts</h2>
+                <div class="widget-body">
+                  <ul class="widget-list">
                     {% for latest_post in trending_posts %}
-                    <li class="latest-post-item mb-2">
-                        <a href="{% url 'post_detail' slug=latest_post.slug %}" class="d-flex align-items-center">
-                            <div class="post-thumbnail mr-2">
-                                {% if latest_post.image %}
-                                <img src="{{ latest_post.image.url }}" class="img-fluid rounded" alt="{{ latest_post.title }}">
-                                {% else %}
-                                <img src="{% static 'img/placeholder-thumbnail.jpg' %}" class="img-fluid rounded" alt="No image available">
-                                {% endif %}
-                            </div>
-                            <div class="post-title">{{ latest_post.title }}</div>
-                        </a>
+                    <li>
+                      <article class="card mb-4">
+                        <div class="card-image">
+                          {% if latest_post.image %}
+                          <img loading="lazy" decoding="async" src="{{ latest_post.image.url }}" alt="{{ latest_post.title }}" class="w-100">
+                          {% else %}
+                          <img loading="lazy" decoding="async" src="{% static 'img/default-image.jpg' %}" alt="Default Thumbnail" class="w-100">
+                          {% endif %}
+                        </div>
+                        <div class="card-body">
+                          <h3><a class="post-title post-title-sm" href="{% url 'post_detail' latest_post.slug %}">{{ latest_post.title }}</a></h3>
+                          <p class="card-text">{{ latest_post.content|truncatewords:10|safe }}</p>
+                          <div class="content"><a class="read-more-btn" href="{% url 'post_detail' latest_post.slug %}">Read Full Article</a></div>
+                        </div>
+                      </article>
                     </li>
                     {% empty %}
-                        <li>No Posts available.</li>
+                    <li>No trending posts available.</li>
                     {% endfor %}
-                </ul>
+                  </ul>
+                </div>
+              </div>
             </div>
-             <!-- AdSense Ad Unit -->
-             <div class="ad mb-4">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <script>
-                  (adsbygoogle = window.adsbygoogle || []).push({
-                    google_ad_client: "YOUR-AD-CLIENT-ID",
-                    enable_page_level_ads: true
-                  });
-                </script>
-            </div>
-        </aside>
 
-        <!-- Main Content -->
-        <main class="col-md-8 col-lg-9">
-            <h1 class="mb-4 text-primary">Post List</h1>
-            <hr>
-            <div class="post-list d-flex flex-column">
-                {% for post in posts %}
-                    <div class="card mb-4 shadow-sm">
-                        {% if post.image %}
-                            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
-                        {% endif %}
+            <!-- Recommended Posts Widget -->
+            <div class="col-lg-12 col-md-6">
+              <div class="widget">
+                <h2 class="section-title mb-3">Recommended</h2>
+                <div class="widget-body">
+                  <div class="widget-list">
+                    {% for spost in sposts %}
+                    <div class="widget-item mb-4">
+                      <article class="card article-card">
+                        <a href="{% url 'post_detail' spost.slug %}">
+                          <div class="card-image">
+                            <img loading="lazy" decoding="async" src="{{ spost.image.url }}" alt="{{ spost.title }}" class="w-100">
+                          </div>
+                        </a>
                         <div class="card-body">
-                            <a href="{% url 'post_detail' slug=post.slug %}" class="text-decoration-none text-dark">
-                                <h2 class="card-title">{{ post.title|safe }}</h2>
-                            </a>
-                            <p class="card-text">{{ post.content|safe }}</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">By {{ post.author|safe }} on {{ post.created_at }}</small>
-                                <span class="badge bg-secondary">{{ post.category.name }}</span>
-                            </div>
-                            {% if user.is_superuser %}
-                                <div class="btn-group mt-3">
-                                    <a href="{% url 'approve_post' post.slug %}" class="btn btn-success btn-sm">Approve</a>
-                                    <a href="{% url 'disapprove_post' post.slug %}" class="btn btn-danger btn-sm">Disapprove</a>
-                                </div>
-                            {% endif %}
+                          <h3><a class="post-title" href="{% url 'post_detail' spost.slug %}">{{ spost.title }}</a></h3>
+                          <p class="card-text">{{ spost.content|truncatewords:10|safe }}</p>
                         </div>
+                      </article>
                     </div>
-                {% empty %}
-                    <div class="alert alert-info text-center">No posts available.</div>
-                {% endfor %}
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
             </div>
 
-             <!-- AdSense Ad Unit -->
-             <div class="ad mb-4">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <script>
-                  (adsbygoogle = window.adsbygoogle || []).push({
-                    google_ad_client: "YOUR-AD-CLIENT-ID",
-                    enable_page_level_ads: true
-                  });
-                </script>
+            <!-- Categories Widget -->
+            <div class="col-lg-12 col-md-6">
+              <div class="widget">
+                <h2 class="section-title mb-3">Categories</h2>
+                <div class="widget-body">
+                  <ul class="widget-list">
+                    {% for category in categories %}
+                    <li>
+                      <a href="{% url 'category_detail' category.slug %}">{{ category.name }} <span class="ml-auto">({{ category.post_set.count }})</span></a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
             </div>
-        </main>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
-
-<style>
-    .sidebar {
-        position: sticky;
-        top: 0;
-        height: 100vh;
-        overflow-y: auto;
-    }
-
-    .card-img-top {
-        height: 180px;
-        object-fit: cover;
-    }
-
-    .card-title {
-        font-size: 1.5rem;
-        color: #333;
-        transition: color 0.3s ease;
-    }
-
-    .card-title:hover {
-        color: #007bff;
-    }
-
-    .card-text {
-        font-size: 1rem;
-        color: #555;
-    }
-
-    .btn-group .btn {
-        margin-right: 0.5rem;
-    }
-</style>
-
+  </div>
+</section>
 {% endblock %}
