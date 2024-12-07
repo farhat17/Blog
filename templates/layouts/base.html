@@ -2,38 +2,51 @@
 <!DOCTYPE html>
 
 <html lang="en-us">
+  
+{% block head %}
+<title>{{ meta_title }} - pitarahub</title>
+<meta name="description" content="{{ meta_description|safe }}">
+<meta name="keywords" content="{{ meta_keywords }}">
 
-<head>
-  <meta charset="utf-8" />
-  <title>Reporter - HTML Blog Template</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-  <meta name="description" content="This is meta description" />
-  <meta name="author" content="Blog" />
-  <link rel="shortcut icon" href="{%  static 'images/favicon.png' %}" type="image/x-icon" />
-  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/x-icon" />
+<!-- Open Graph Meta Tags (for Social Media Sharing) -->
+<meta property="og:title" content="{{ meta_title }}">
+<meta property="og:description" content="{{ meta_description|safe|truncatewords:15 }}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="article">
 
-  <!-- theme meta -->
-  <meta name="theme-name" content="reporter" />
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:title" content="{{ meta_title|safe|truncatewords:10 }}">
+<meta name="twitter:description" content="{{ meta_description|safe|truncatewords:20 }}">
+<meta name="twitter:url" content="{{ request.build_absolute_uri }}">
+<meta name="twitter:card" content="summary_large_image">
 
-  <!-- # Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Neuton:wght@700&family=Work+Sans:wght@400;500;600;700&display=swap"
-    rel="stylesheet" />
-    <link href="/assets/fontawesome/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<!-- Charset and viewport meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3">
 
-  <!-- # CSS Plugins -->
-  <link rel="stylesheet" href="{% static 'plugins/bootstrap/bootstrap.min.css' %}" />
+<!-- Author and theme meta -->
+<meta name="author" content="{{ meta_keywords }}">
+<meta name="theme-name" content="{{ meta_description|safe|truncatewords:10 }}">
 
-  <!-- # Main Style Sheet -->
-  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-  <!-- <link rel="stylesheet" href="{% static 'css/base.css' %}" /> -->
+<!-- Favicon -->
+<link rel="shortcut icon" href="{% static 'img/hero-image.jpg' %}" type="image/x-icon">
+<link rel="icon" href="{% static 'img/hero-image.jpg' %}" type="image/x-icon">
 
-  <script type="text/javascript" src="{% static 'tinymce/tinymce.min.js' %}"></script>
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Neuton:wght@700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-</head>
+<!-- FontAwesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<!-- CSS Plugins -->
+<link rel="stylesheet" href="{% static 'plugins/bootstrap/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<!-- TinyMCE -->
+<script type="text/javascript" src="{% static 'tinymce/tinymce.min.js' %}"></script>
+{% endblock %}
 
 <body>
   <header class="navigation sticky-top bg-light">
@@ -91,18 +104,16 @@
       </nav>
     </div>
   </header>
-
   <!-- Main Content -->
   <main class="main">
     <div class="content container">{% block content %} {% endblock %}</div>
   </main>
-
   <footer class="bg-dark mt-5">
     <div class="container section">
       <div class="row">
         <div class="col-lg-10 mx-auto text-center">
           <a class="d-inline-block mb-4 pb-2" href="{% url 'index' %}">
-            <img loading="prelaod" decoding="async" class="img-fluid" src="images/logo-white.png" alt="PitaraHub" />
+            <img loading="prelaod" decoding="async" class="img-fluid" src="{% static 'images/logo.webp' %}" alt="PitaraHub" />
           </a>
           <ul class="p-0 d-flex navbar-footer mb-0 list-unstyled">
             <li class="nav-item my-0">
@@ -132,10 +143,8 @@
   <!-- # JS Plugins -->
   <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'plugins/bootstrap/bootstrap.min.js' %}"></script>
-
   <!-- Main Script -->
   <script src="{% static 'js/script.js' %}"></script>
-
   <script type="text/javascript">
     tinymce.init({
       selector: "textarea",
@@ -168,5 +177,4 @@
     })();
   </script>
 </body>
-
 </html>

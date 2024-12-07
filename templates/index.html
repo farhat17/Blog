@@ -102,7 +102,7 @@
                   class="w-100 author-thumb-sm d-block">
                   <h2 class="widget-title my-3">{{spost.title|safe}}</h2>
                   <p class="mb-3 pb-2">{{spost.content|truncatewords:10|safe}}</p>
-                  <a href="about.html" class="btn btn-sm btn-outline-primary">Know More</a>
+                  <a href="{% url 'post_detail' spost.slug %}" class="btn btn-sm btn-outline-primary">Know More</a>
                 </div>
               </div>
             </div>

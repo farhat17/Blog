@@ -27,11 +27,11 @@
 
             </ul>
             <ul class="post-meta mb-4">
-              
+
               <li>
                 {% for category in post.categories.all %}
-                 <a href="">{{category.name}}</a>
-              {% endfor %}
+                <a href="">{{category.name}}</a>
+                {% endfor %}
 
               </li>
             </ul>
@@ -44,84 +44,80 @@
               <hr>
 
               {% if user.is_authenticated %}
-                <div class="p-1 d-flex justify-items-center align-items-center">
-                    <a href="{% url 'edit_post' slug=post.slug %}" class="btn btn-sm btn-primary">Edit</a>
-                    <a href="{% url 'delete_post' slug=post.slug %}" class="btn btn-sm btn-danger">Delete</a>
-                </div>
-                {% endif %}
-                <hr class="mb-4">
-                <div class="reaction-buttons d-flex justify-content-center align-items-center">
-                  <button class="reaction-btn" id="like-btn" data-reaction="like">
-                      👍 Like <span class="reaction-count" id="like-count">{{ like_count }}</span>
-                  </button>
-                  <button class="reaction-btn" id="dislike-btn" data-reaction="dislike">
-                      👎 Dislike <span class="reaction-count" id="dislike-count">{{ dislike_count }}</span>
-                  </button>
-                  <button class="reaction-btn" id="love-btn" data-reaction="love">
-                      ❤️ Love <span class="reaction-count" id="love-count">{{ love_count }}</span>
-                  </button>
+              <div class="p-1 d-flex justify-items-center align-items-center">
+                <a href="{% url 'edit_post' slug=post.slug %}" class="btn btn-sm btn-primary">Edit</a>
+                <a href="{% url 'delete_post' slug=post.slug %}" class="btn btn-sm btn-danger">Delete</a>
               </div>
               
+              {% endif %}
+              <hr class="mb-4">
+              <div class="reaction-buttons d-flex justify-content-center align-items-center">
+                <button class="reaction-btn" id="like-btn" data-reaction="like">
+                  👍 Like <span class="reaction-count" id="like-count">{{ like_count }}</span>
+                </button>
+                <button class="reaction-btn" id="dislike-btn" data-reaction="dislike">
+                  👎 Dislike <span class="reaction-count" id="dislike-count">{{ dislike_count }}</span>
+                </button>
+                <button class="reaction-btn" id="love-btn" data-reaction="love">
+                  ❤️ Love <span class="reaction-count" id="love-count">{{ love_count }}</span>
+                </button>
+              </div>
+
               <script>
-                  document.querySelectorAll('.reaction-btn').forEach(function (button) {
-                      button.addEventListener('click', function () {
-                          const reactionType = this.dataset.reaction;
-              
-                          fetch("{% url 'react_to_post' slug=post.slug reaction_type='REACT_TYPE' %}".replace('REACT_TYPE', reactionType), {
-                              method: 'POST',
-                              headers: {
-                                  'Content-Type': 'application/json',
-                                  'X-CSRFToken': '{{ csrf_token }}'
-                              },
-                          })
-                          .then(response => response.json())
-                          .then(data => {
-                              document.getElementById('like-count').textContent = data.like_count;
-                              document.getElementById('dislike-count').textContent = data.dislike_count;
-                              document.getElementById('love-count').textContent = data.love_count;
-              
-                              // Optional: highlight the button based on the user's reaction
-                              document.querySelectorAll('.reaction-btn').forEach(btn => {
-                                  btn.classList.remove('active');
-                              });
-                              if (reactionType === data.current_reaction) {
-                                  document.getElementById(`${reactionType}-btn`).classList.add('active');
-                              }
-                          });
+                document.querySelectorAll('.reaction-btn').forEach(function (button) {
+                  button.addEventListener('click', function () {
+                    const reactionType = this.dataset.reaction;
+
+                    fetch("{% url 'react_to_post' slug=post.slug reaction_type='REACT_TYPE' %}".replace('REACT_TYPE', reactionType), {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                      },
+                    })
+                      .then(response => response.json())
+                      .then(data => {
+                        document.getElementById('like-count').textContent = data.like_count;
+                        document.getElementById('dislike-count').textContent = data.dislike_count;
+                        document.getElementById('love-count').textContent = data.love_count;
+
+                        // Optional: highlight the button based on the user's reaction
+                        document.querySelectorAll('.reaction-btn').forEach(btn => {
+                          btn.classList.remove('active');
+                        });
+                        if (reactionType === data.current_reaction) {
+                          document.getElementById(`${reactionType}-btn`).classList.add('active');
+                        }
                       });
                   });
+                });
               </script>
-              
-                
-        
-                <!-- Social Share Buttons -->
-                <div class="share-buttons d-flex flex-wrap gap-2 justify-content-center align-items-center mb-4">
-                  <a
-                    href="https://api.whatsapp.com/send?text={{ post.title|urlencode }}%20{{ post.content|striptags|slice:':200'|urlencode }}%20{{ request.build_absolute_uri|urlencode }}%20Read%20more%20here:%20{{ request.build_absolute_uri|urlencode }}"
-                    target="_blank" class="btn btn-success me-2" title="Share on WhatsApp">
-                    <i class="fab fa-whatsapp"></i>
-                  </a>
-                  <a
-                    href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ post.title }}%20{{ post.content|striptags|slice:':200'|urlencode }}"
-                    target="_blank" class="btn btn-info me-2" title="Share on Twitter">
-                    <i class="fab fa-twitter"></i>
-                  </a>
-                  <a
-                    href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}%20{{ post.content|striptags|slice:':200'|urlencode }}"
-                    target="_blank" class="btn btn-primary me-2" title="Share on Facebook">
-                    <i class="fab fa-facebook-f"></i>
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ post.title }}%20{{ post.content|striptags|slice:':200'|urlencode }}"
-                    target="_blank" class="btn btn-primary me-2" title="Share on LinkedIn">
-                    <i class="fab fa-linkedin-in"></i>
-                  </a>
-                  <a
-                    href="mailto:?subject={{ post.title }}&body={{ request.build_absolute_uri }}"
-                    class="btn btn-secondary" title="Share via Email">
-                    <i class="fas fa-envelope"></i>
-                  </a>
-                </div>
+
+
+
+              <!-- Social Share Buttons -->
+              <div class="share-buttons d-flex flex-wrap gap-2 justify-content-center align-items-center mb-4">
+                <a href="https://api.whatsapp.com/send?text={{ post.title|urlencode }}%20{{ post.content|striptags|slice:':200'|urlencode }}%20{{ request.build_absolute_uri|urlencode }}%20Read%20more%20here:%20{{ request.build_absolute_uri|urlencode }}"
+                  target="_blank" class="btn btn-success me-2" title="Share on WhatsApp">
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ post.title }}%20{{ post.content|striptags|slice:':200'|urlencode }}"
+                  target="_blank" class="btn btn-info me-2" title="Share on Twitter">
+                  <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}%20{{ post.content|striptags|slice:':200'|urlencode }}"
+                  target="_blank" class="btn btn-primary me-2" title="Share on Facebook">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ post.title }}%20{{ post.content|striptags|slice:':200'|urlencode }}"
+                  target="_blank" class="btn btn-primary me-2" title="Share on LinkedIn">
+                  <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="mailto:?subject={{ post.title }}&body={{ request.build_absolute_uri }}"
+                  class="btn btn-secondary" title="Share via Email">
+                  <i class="fas fa-envelope"></i>
+                </a>
+              </div>
 
               <!--               
               <h2 id="youtube-video">Youtube video</h2>
@@ -234,7 +230,7 @@
     </div>
   </section>
 
-  
+
 </main>
 
 {% endblock %}

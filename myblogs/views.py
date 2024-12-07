@@ -102,7 +102,7 @@ def create_post(request):
     return render(request, 'post_form.html', {'form': form})
 
 
-# Edit Post 
+#=================== Edit Post ===================================
 
 @login_required
 def edit_post(request, slug):
@@ -113,7 +113,7 @@ def edit_post(request, slug):
         if request.method == 'POST':
             form = PostForm(request.POST, request.FILES, instance=post)
             if form.is_valid():
-                form.save()  # This will save the post and its related objects
+                form.save()  
                 return redirect('post_detail', slug=post.slug)
         else:
             form = PostForm(instance=post)
@@ -136,11 +136,8 @@ def delete_post(request, slug):
         return render(request, 'post_confirm_delete.html', {'post': post})
     else:
         return HttpResponseForbidden("You don't have permission to delete this post.")
-    
-    
-    
-    
-# Post Detail  
+       
+# ================= Post Detail =====================================
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
@@ -158,15 +155,15 @@ def post_detail(request, slug):
         'trending_posts': trending_posts,
         'categories':categories,
         'author':author,
+        'meta_title': post.title,
+        'meta_description': post.content[:160],
+        'meta_keywords': ', '.join([category.name for category in post.categories.all()]),
+    
     }
     
     return render(request, 'post_detail.html', context)
-
-
-    
-    
-# Category_Detail
-
+   
+# ================= Category_Detail ===================================
 
 def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
