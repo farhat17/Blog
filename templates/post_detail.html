@@ -27,7 +27,12 @@
 
             </ul>
             <ul class="post-meta mb-4">
-              <li> <a href="">{{post.category.name}}</a>
+              
+              <li>
+                {% for category in post.categories.all %}
+                 <a href="">{{category.name}}</a>
+              {% endfor %}
+
               </li>
             </ul>
             <h1 class="my-3">{{post.title|safe}}</h1>
@@ -39,27 +44,58 @@
               <hr>
 
               {% if user.is_authenticated %}
-                <div class="p-1">
+                <div class="p-1 d-flex justify-items-center align-items-center">
                     <a href="{% url 'edit_post' slug=post.slug %}" class="btn btn-sm btn-primary">Edit</a>
                     <a href="{% url 'delete_post' slug=post.slug %}" class="btn btn-sm btn-danger">Delete</a>
                 </div>
                 {% endif %}
-
-                <div class="reaction-buttons">
-                  <button class="reaction-btn" data-reaction="like">
-                    👍 Like <span class="reaction-count">0</span>
+                <hr class="mb-4">
+                <div class="reaction-buttons d-flex justify-content-center align-items-center">
+                  <button class="reaction-btn" id="like-btn" data-reaction="like">
+                      👍 Like <span class="reaction-count" id="like-count">{{ like_count }}</span>
                   </button>
-                  <button class="reaction-btn" data-reaction="dislike">
-                    👎 Dislike <span class="reaction-count">0</span>
+                  <button class="reaction-btn" id="dislike-btn" data-reaction="dislike">
+                      👎 Dislike <span class="reaction-count" id="dislike-count">{{ dislike_count }}</span>
                   </button>
-                  <button class="reaction-btn" data-reaction="love">
-                    ❤️ Love <span class="reaction-count">0</span>
+                  <button class="reaction-btn" id="love-btn" data-reaction="love">
+                      ❤️ Love <span class="reaction-count" id="love-count">{{ love_count }}</span>
                   </button>
-                </div>
+              </div>
+              
+              <script>
+                  document.querySelectorAll('.reaction-btn').forEach(function (button) {
+                      button.addEventListener('click', function () {
+                          const reactionType = this.dataset.reaction;
+              
+                          fetch("{% url 'react_to_post' slug=post.slug reaction_type='REACT_TYPE' %}".replace('REACT_TYPE', reactionType), {
+                              method: 'POST',
+                              headers: {
+                                  'Content-Type': 'application/json',
+                                  'X-CSRFToken': '{{ csrf_token }}'
+                              },
+                          })
+                          .then(response => response.json())
+                          .then(data => {
+                              document.getElementById('like-count').textContent = data.like_count;
+                              document.getElementById('dislike-count').textContent = data.dislike_count;
+                              document.getElementById('love-count').textContent = data.love_count;
+              
+                              // Optional: highlight the button based on the user's reaction
+                              document.querySelectorAll('.reaction-btn').forEach(btn => {
+                                  btn.classList.remove('active');
+                              });
+                              if (reactionType === data.current_reaction) {
+                                  document.getElementById(`${reactionType}-btn`).classList.add('active');
+                              }
+                          });
+                      });
+                  });
+              </script>
+              
                 
         
                 <!-- Social Share Buttons -->
-                <div class="share-buttons d-flex flex-wrap gap-2 mb-4">
+                <div class="share-buttons d-flex flex-wrap gap-2 justify-content-center align-items-center mb-4">
                   <a
                     href="https://api.whatsapp.com/send?text={{ post.title|urlencode }}%20{{ post.content|striptags|slice:':200'|urlencode }}%20{{ request.build_absolute_uri|urlencode }}%20Read%20more%20here:%20{{ request.build_absolute_uri|urlencode }}"
                     target="_blank" class="btn btn-success me-2" title="Share on WhatsApp">
@@ -197,89 +233,7 @@
       </div>
     </div>
   </section>
-  <script>
-    $(document).ready(function () {
-      // Handle reaction button clicks
-      $('.reaction-btn').on('click', function () {
-        const reactionType = $(this).data('reaction');
-        const postSlug = "{{ post.slug }}";  // Pass the post slug dynamically
-  
-        $.ajax({
-          url: "{% url 'react_to_post' slug=post.slug reaction_type='REACT_TYPE' %}".replace('REACT_TYPE', reactionType),
-          type: 'POST',
-          data: {
-            'csrfmiddlewaretoken': '{{ csrf_token }}'
-          },
-          success: function (response) {
-            // Update the reaction counts dynamically
-            updateReactionCounts(response);
-          },
-          error: function (xhr, status, error) {
-            console.log('Error:', error);
-            alert('There was an error processing your reaction. Please try again.');
-          }
-        });
-      });
-  
-      // Function to update reaction buttons and counts dynamically
-      function updateReactionCounts(data) {
-        // Update the reaction count for each reaction type
-        $('.reaction-btn').each(function () {
-          const reactionType = $(this).data('reaction');
-          $(this).find('.reaction-count').text(data[reactionType + '_count']);
-          
-          // Disable the button if the user reacted with this type
-          if (data.current_reaction === reactionType) {
-            $(this).prop('disabled', true); // Disable the button if already reacted
-          } else {
-            $(this).prop('disabled', false); // Enable the button if not reacted
-          }
-        });
-      }
-    });
-  </script>
-  
-  <script>
-    $(document).ready(function () {
-      // Handle reaction button clicks
-      $('.reaction-btn').on('click', function () {
-        const reactionType = $(this).data('reaction');
-        const postSlug = "{{ post.slug }}";  // Pass the post slug dynamically
-  
-        $.ajax({
-          url: "{% url 'react_to_post' slug=post.slug reaction_type='REACT_TYPE' %}".replace('REACT_TYPE', reactionType),
-          type: 'POST',
-          data: {
-            'csrfmiddlewaretoken': '{{ csrf_token }}'
-          },
-          success: function (response) {
-            // Update the reaction counts dynamically
-            updateReactionCounts(response);
-          },
-          error: function (xhr, status, error) {
-            console.log('Error:', error);
-            alert('There was an error processing your reaction. Please try again.');
-          }
-        });
-      });
-  
-      // Function to update reaction buttons and counts dynamically
-      function updateReactionCounts(data) {
-        // Update the reaction count for each reaction type
-        $('.reaction-btn').each(function () {
-          const reactionType = $(this).data('reaction');
-          $(this).find('.reaction-count').text(data[reactionType + '_count']);
-          
-          // Disable the button if the user reacted with this type
-          if (data.current_reaction === reactionType) {
-            $(this).prop('disabled', true); // Disable the button if already reacted
-          } else {
-            $(this).prop('disabled', false); // Enable the button if not reacted
-          }
-        });
-      }
-    });
-  </script>
+
   
 </main>
 

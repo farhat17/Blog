@@ -238,47 +238,51 @@ def add_comment(request, slug):
 # Like/Dislike 
 
 def react_to_post(request, slug, reaction_type):
+    # Get the post
     post = get_object_or_404(Post, slug=slug)
     
-    if reaction_type not in dict(PostReaction.REACTION_CHOICES).keys():
+    # Define valid reactions
+    valid_reactions = dict(PostReaction.REACTION_CHOICES).keys()
+    if reaction_type not in valid_reactions:
         return redirect('post_detail', slug=post.slug)
     
-    # Use session key for unauthenticated users  
+    # Check for user session or authenticated user
     session_key = request.session.session_key or request.session.create()
     user = request.user if request.user.is_authenticated else None
 
-    # Find existing reaction
+    # Check if the user has already reacted to the post
     existing_reaction = PostReaction.objects.filter(post=post, user=user, session_key=session_key).first()
-    
+
     if existing_reaction:
         if existing_reaction.reaction == reaction_type:
+            # Remove reaction if the same reaction is clicked again
             existing_reaction.delete()
             current_reaction = None
         else:
+            # Update to the new reaction
             existing_reaction.reaction = reaction_type
             existing_reaction.save()
             current_reaction = reaction_type
     else:
+        # Create a new reaction
         PostReaction.objects.create(post=post, user=user, session_key=session_key, reaction=reaction_type)
         current_reaction = reaction_type
-    # Calculate reaction counts
+
+    # Get updated reaction counts
     reaction_counts = {
         reaction: post.reactions.filter(reaction=reaction).count()
-        for reaction in dict(PostReaction.REACTION_CHOICES).keys()
+        for reaction in valid_reactions
     }
 
-    
+    # Return updated counts as JSON
     response_data = {
         'like_count': reaction_counts.get('like', 0),
         'dislike_count': reaction_counts.get('dislike', 0),
         'love_count': reaction_counts.get('love', 0),
         'current_reaction': current_reaction,
     }
-    
-    # return JsonResponse(response_data, slug=post.slug)
-    return redirect('post_detail', slug=post.slug)
 
-
+    return JsonResponse(response_data)
 
 @login_required
 @user_passes_test(is_superuser)

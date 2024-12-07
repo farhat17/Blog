@@ -81,12 +81,13 @@ class PostReaction(models.Model):
     REACTION_CHOICES = [
         ('like', 'Like'),
         ('dislike', 'Dislike'),
+        ('love', 'Love'),
     ]
     post = models.ForeignKey(Post, related_name='reactions', on_delete=models.CASCADE)
     reaction = models.CharField(max_length=10, choices=REACTION_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
-    session_key = models.CharField(max_length=40, null=True, blank=True) 
+    session_key = models.CharField(max_length=40, null=True, blank=True)  # For anonymous users
 
     class Meta:
         unique_together = ('post', 'user', 'session_key', 'reaction')
