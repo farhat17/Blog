@@ -1,0 +1,219 @@
+{% extends 'layouts/base.html' %} {% block content %}
+<main>
+  <section class="section">
+    <div class="container">
+      <div class="row">
+        <!-- Content Section (Post Detail) -->
+        <div class="col-lg-8 mb-5 mb-lg-0">
+          <article>
+            <!-- Post Image -->
+            {% if post.image %}
+            <img
+              loading="lazy"
+              decoding="async"
+              src="{{ post.author.profile.profile_picture.url }}"
+              alt="{{ post.title }}"
+              class="w-100"
+            />
+            {% else %}
+            <img
+              loading="lazy"
+              decoding="async"
+              src="images/default-post.jpg"
+              alt="{{ post.title }}"
+              class="w-100"
+            />
+            {% endif %}
+
+            <!-- Post Meta (Author and Date) -->
+            <!-- <ul class="post-meta mb-2 mt-4">
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  style="margin-right:5px;margin-top:-4px" class="text-dark" viewBox="0 0 16 16">
+                  <path d="M5.5 10.5A.5.5 0 0 1 6 10h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5z" />
+                  <path
+                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
+                  <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
+                </svg><span>{{ post.author.username }}</span>&nbsp;<span>{{ post.created_at|date:"F d, Y" }}</span>
+              </li>
+            </ul> -->
+
+            <!-- Post Categories -->
+            <!-- <ul class="post-meta mb-4">
+              <li>
+                {% for category in post.categories.all %}
+                <a href="{% url 'category_detail' category.slug %}">{{ category.name }}</a>
+                {% endfor %}
+              </li>
+            </ul> -->
+
+            <!-- Post Title and Content -->
+            <h1 class="my-3">{{ post.author.get_full_name }}</h1>
+            <h4>{{ post.author.username }}</h4>
+            <hr />
+            <div class="content text-left">
+              <p>{{ post.author.profile.bio|safe }}</p>
+            </div>
+
+            <hr />
+
+            <!-- Edit and Delete Post Buttons (for authenticated users) -->
+            {% if user.is_authenticated %}
+            <div class="p-1 d-flex justify-items-center align-items-center">
+              <a
+                href="{% url 'edit_post' slug=post.slug %}"
+                class="btn btn-sm btn-primary"
+                >Edit</a
+              >
+              <a
+                href="{% url 'delete_post' slug=post.slug %}"
+                class="btn btn-sm btn-danger"
+                >Delete</a
+              >
+            </div>
+            {% endif %}
+          </article>
+        </div>
+
+        <!-- Sidebar Section -->
+        <div class="col-lg-4">
+          <div class="widget-blocks">
+            <div class="row">
+              <!-- Author Profile -->
+              <div class="col-lg-12">
+                <div class="widget">
+                  <div class="widget-body">
+                    <div class="widget-list">
+                      {% for author_post in author_posts %}
+                      <article class="card mb-4">
+                        <div class="card-image">
+                          <div class="post-info">
+                            <span class="text-uppercase">1 min read</span>
+                          </div>
+                          {% if author_post.image %}
+                          <img
+                            loading="lazy"
+                            decoding="async"
+                            src="{{ author_post.image.url }}"
+                            alt="{{ author_post.title }}"
+                            class="w-100"
+                          />
+                          {% else %}
+                          <img
+                            loading="lazy"
+                            decoding="async"
+                            src="images/default-post.jpg"
+                            alt="{{ author_post.title }}"
+                            class="w-100"
+                          />
+                          {% endif %}
+                        </div>
+                        <div class="card-body px-0 pb-1">
+                          <h3>
+                            <a
+                              class="post-title post-title-sm"
+                              href="{% url 'post_detail' author_post.slug %}"
+                              >{{ author_post.title }}</a
+                            >
+                          </h3>
+                          <p class="card-text">
+                            {{ author_post.content|truncatewords:20|safe }}
+                          </p>
+                          <div class="content">
+                            <a
+                              class="read-more-btn"
+                              href="{% url 'post_detail' author_post.slug %}"
+                              >Read Full Article</a
+                            >
+                          </div>
+                        </div>
+                      </article>
+                      {% empty %}
+                      <p>No posts by this author yet.</p>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recommended Posts -->
+              <div class="col-lg-12 col-md-6">
+                <div class="widget">
+                  <h2 class="section-title mb-3">Recommended</h2>
+                  <div class="widget-body">
+                    <div class="widget-list">
+                      {% for recommended_post in trending_posts %}
+                      <article class="card mb-4">
+                        <div class="card-image">
+                          <div class="post-info">
+                            <span class="text-uppercase">1 minute read</span>
+                          </div>
+                          {% if recommended_post.image %}
+                          <img
+                            loading="lazy"
+                            decoding="async"
+                            src="{{ recommended_post.image.url }}"
+                            alt="{{ recommended_post.title }}"
+                            class="w-100"
+                          />
+                          {% else %}
+                          <img
+                            loading="lazy"
+                            decoding="async"
+                            src="images/default-post.jpg"
+                            alt="{{ recommended_post.title }}"
+                            class="w-100"
+                          />
+                          {% endif %}
+                        </div>
+                        <div class="card-body px-0 pb-1">
+                          <h3>
+                            <a
+                              class="post-title post-title-sm"
+                              href="{% url 'post_detail' recommended_post.slug %}"
+                              >{{ recommended_post.title }}</a
+                            >
+                          </h3>
+                          <p class="card-text">
+                            {{ recommended_post.content|truncatewords:20|safe }}
+                          </p>
+                          <div class="content">
+                            <a
+                              class="read-more-btn"
+                              href="{% url 'post_detail' recommended_post.slug %}"
+                              >Read Full Article</a
+                            >
+                          </div>
+                        </div>
+                      </article>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Categories List -->
+              <div class="col-lg-12 col-md-6">
+                <div class="widget">
+                  <h2 class="section-title mb-3">Categories</h2>
+                  <div class="widget-body">
+                    <ul class="widget-list">
+                      {% for category in categories %}
+                      <li>
+                        <a href="{% url 'category_detail' category.slug %}"
+                          >{{ category.name }}</a
+                        >
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

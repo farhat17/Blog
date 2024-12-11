@@ -11,6 +11,7 @@ from .models import Post,PostReaction,Profile
 from django.contrib.auth import logout as django_logout 
 from django.contrib.auth.decorators import user_passes_test
 from django.http import JsonResponse
+import re
 def is_superuser(user):
     return user.is_superuser
 
@@ -206,30 +207,44 @@ def category(request):
 
 def add_comment(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    
+    print(post)
     if request.method == 'POST':
-        
-        form = CommentForm(request.POST,request.Files)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            print(comment)
-            comment = Comment(
-                name=form.cleaned_data['name'],
-                email=form.cleaned_data['email'],
-                content=form.cleaned_data['content'],
-                post=post
-            )
-            print(comment.name)
-            comment.save()
-            
-            messages.success(request, 'Your comment has been added.')
-            return redirect('post_detail', slug=post.slug)
-        else:
-            messages.error(request, 'There was an error with your comment. Please check the form.')
-    else:
-        form = CommentForm()
+        name = request.POST.get('name').strip()
+        print(name)
+        email = request.POST.get('email').strip()
+        content = request.POST.get('content').strip()
+        errors = {}
 
-    return render(request, 'post_detail.html', {'post': post, 'form': form})
+        # Basic Validation
+        if not name:
+            errors['name'] = 'Name is required.'
+        if not email or not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', email):
+            errors['email'] = 'Invalid email address.'
+        if not content:
+            errors['content'] = 'Content is required.'
+        elif len(content) > 500:
+            errors['content'] = 'Content should not exceed 500 characters.'
+
+        # If errors, show them in the form
+        if errors:
+            return render(request, 'post_detail.html', {
+                'post': post, 
+                'form': {'name': name, 'email': email, 'content': content}, 
+                'errors': errors
+            })
+
+        # Save the comment
+        comment = Comment(name=name, email=email, content=content, post=post)
+        comment.save()
+
+        # Optionally use messages to show success
+        messages.success(request, 'Your comment has been posted successfully!')
+        
+        # Redirect back to the post detail page
+        return redirect('post_detail', slug=slug)
+
+    # If GET request, just render the form
+    return render(request, 'post_detail.html', {'post': post})
 
 
 # Like/Dislike 
@@ -320,7 +335,30 @@ def post_list(request):
         return render(request, 'post_list.html',context )
     
     
-    
+#  ===================== Seach ======================================
+
+def search(request):
+    query = request.GET.get('search', '')
+    if query:
+        posts = Post.objects.filter(title__icontains=query) | Post.objects.filter(content__icontains=query)
+    else:
+        posts = Post.objects.none()  
+
+    return render(request, 'index.html', {'query': query, 'posts': posts})
     
 def no_permission(request):
     return render(request, 'no_permission.html')
+
+
+
+def author_detail(request, username):
+    # Fetch the user and their profile
+    author = get_object_or_404(User, username=username)
+    
+    # Fetch all posts by the author
+    author_posts = Post.objects.filter(author=author)
+    
+    return render(request, 'about.html', {
+        'post': author_posts.first(),  # Pass the first post for the profile section
+        'author_posts': author_posts,  # All posts by this author
+    })

@@ -17,5 +17,7 @@ urlpatterns = [
     path('postlist/', views.post_list, name='post_list'),
     path('approve_post/<slug:slug>/', views.approve_post, name='approve_post'),
     path('disapprove_post/<slug:slug>/', views.disapprove_post, name='disapprove_post'),
+    path('search/', views.search, name='search'),
+    path('author/<str:username>/', views.author_detail, name='author_detail'),
     path('no_permission/', views.no_permission, name='no_permission'),
 ]

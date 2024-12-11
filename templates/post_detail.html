@@ -94,6 +94,54 @@
               </script>
 
 
+              <!-- Comment Form -->
+
+              <div class="container">
+                <div class="row">
+                  <!-- Comments Section -->
+            <h3>Comments</h3>
+            {% for comment in comments %}
+              <div class="comment">
+                <p><strong>{{ comment.name }}</strong> ({{ comment.created_at|date:"F d, Y" }})</p>
+                <p>{{ comment.content }}</p>
+              </div>
+            {% empty %}
+              <p>No comments yet. Be the first to comment!</p>
+            {% endfor %}
+            
+            <!-- Comment Form -->
+            <h3>Leave a comment</h3>
+            <form method="post">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="comment-name">Name:</label>
+                <input type="text" id="comment-name" name="name" class="form-control" value="{{ form.name.value }}">
+              
+              </div>
+              <div class="form-group">
+                <label for="comment-email">Email:</label>
+                <input type="email" id="comment-email" name="email" class="form-control" value="{{ form.email.value }}">
+              </div>
+              <div class="form-group">
+                <label for="comment-text">Leave a comment:</label>
+                <textarea id="comment-text" name="content" class="form-control" rows="3">{{ form.content.value }}</textarea>
+                <small id="comment-text-help" class="form-text text-muted">Your comment must be between 10 and 500 characters long.</small>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+
+              <!-- Messages Display -->
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            </form>
+                </div>
+              </div>
 
               <!-- Social Share Buttons -->
               <div class="share-buttons d-flex flex-wrap gap-2 justify-content-center align-items-center mb-4">
@@ -138,11 +186,17 @@
               <div class="col-lg-12">
                 <div class="widget">
                   <div class="widget-body">
-                    <img loading="lazy" decoding="async" src="{{ post.author.profile_image.url }}" alt="About Me"
+                    {% if post.author.profile.profile_picture %}
+                    <img loading="lazy" decoding="async" src="{{ post.author.profile.profile_picture.url }}" alt="About Me"
                       class="w-100 author-thumb-sm d-block">
+                      {% else %}
+                        <img src="default-avatar.jpg" alt="Default Author's Profile Picture" class="author-img" style="width: 50px; height: 50px; border-radius: 50%;">
+                      {% endif %}
                     <h1>{{ post.author|safe }}</h1>
+                    <h4>{{ post.author.username }}</h4>
+                   <p>{{ post.author.profile.bio|safe }}</p>
                     <!-- <h2 class="widget-title my-3">{{post.author.name}}</h2> -->
-                    <p class="mb-3 pb-2">{{ post.author.bio|safe }}</p> <a href="about.html"
+                    <p class="mb-3 pb-2">{{ post.author.bio|safe }}</p> <a href="{% url 'author_detail' post.author.username %}"
                       class="btn btn-sm btn-outline-primary">Know
                       More</a>
                   </div>

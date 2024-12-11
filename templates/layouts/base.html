@@ -5,8 +5,8 @@
   
 {% block head %}
 <title>{{ meta_title }} - pitarahub</title>
-<meta name="description" content="{{ meta_description|safe }}">
-<meta name="keywords" content="{{ meta_keywords }}">
+<meta name="description" content="{{ meta_description|escape }}">
+<meta name="keywords" content="{{ meta_keywords|escape }}">
 
 <!-- Open Graph Meta Tags (for Social Media Sharing) -->
 <meta property="og:title" content="{{ meta_title }}">
@@ -62,9 +62,10 @@
             <span class="navbar-toggler-icon"></span>
           </button>
         </div>
-        <form action="#!" class="search order-lg-3 order-md-2 order-3 ml-auto">
-          <input class="form-control" id="search-query" name="search" type="search" placeholder="Search..." autocomplete="off"  />
-        </form>
+        <form action="{% url 'search' %}" class="search order-lg-3 order-md-2 order-3 ml-auto" method="get">
+          <input class="form-control" id="search-query" name="search" type="search" placeholder="Search..." autocomplete="off" value="{{ request.GET.search }}">
+      </form>
+      
         <div class="collapse navbar-collapse text-center order-lg-2 order-4" id="navigation">
           <ul class="navbar-nav mx-auto mt-3 mt-lg-0">
             <li class="nav-item">
@@ -106,7 +107,22 @@
   </header>
   <!-- Main Content -->
   <main class="main">
-    <div class="content container">{% block content %} {% endblock %}</div>
+    <div class="content container">{% block content %} {% if query %}
+      <p>You searched for: <strong>{{ query }}</strong></p>
+    {% endif %}
+
+    {% if posts %}
+      <ul>
+        {% for post in posts %}
+          <li>
+            <a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a>
+            <p>{{ post.content|truncatewords:50 }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No results found.</p>
+    {% endif %}{% endblock %}</div>
   </main>
   <footer class="bg-dark mt-5">
     <div class="container section">
@@ -149,7 +165,7 @@
     tinymce.init({
       selector: "textarea",
       plugins:
-        "advlist autolink lists link image charmap print preview hr anchor pagebreak insertdatetime media table paste" ,
+        "print hr advlist autolink lists link image charmap print preview hr anchor pagebreak insertdatetime media table paste" ,
       toolbar_mode: "floating",
       setup: function (editor) {
         editor.on("init", function () {
