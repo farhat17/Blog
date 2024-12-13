@@ -207,10 +207,12 @@ def category(request):
 
 def add_comment(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    print(post)
+    comments = post.comments.all()  
+    for comment in comments:
+        print(comment)
+
     if request.method == 'POST':
         name = request.POST.get('name').strip()
-        print(name)
         email = request.POST.get('email').strip()
         content = request.POST.get('content').strip()
         errors = {}
@@ -228,7 +230,8 @@ def add_comment(request, slug):
         # If errors, show them in the form
         if errors:
             return render(request, 'post_detail.html', {
-                'post': post, 
+                'post': post,
+                'comments': comments,  # Pass comments to the template
                 'form': {'name': name, 'email': email, 'content': content}, 
                 'errors': errors
             })
@@ -237,14 +240,15 @@ def add_comment(request, slug):
         comment = Comment(name=name, email=email, content=content, post=post)
         comment.save()
 
-        # Optionally use messages to show success
         messages.success(request, 'Your comment has been posted successfully!')
         
-        # Redirect back to the post detail page
         return redirect('post_detail', slug=slug)
 
-    # If GET request, just render the form
-    return render(request, 'post_detail.html', {'post': post})
+    # If GET request, no errors, just render the post
+    return render(request, 'post_detail.html', {
+        'post': post,
+        'comments': comments  # Make sure comments are passed here too
+    })
 
 
 # Like/Dislike 
