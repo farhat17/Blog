@@ -1,6 +1,5 @@
 Django==4.2.4
 gunicorn==22.0.0
 whitenoise==6.5.0
-mysqlclient==2.2.1
 django-crispy-forms==2.3
 django-tinymce==4.1.0
