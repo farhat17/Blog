@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Blog
 
 # Django Blog
@@ -172,3 +173,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 i will update this soon for more 
 >>>>>>> b0dc644107861ffb6a4785e6c3310ca6645ea769
+=======
+# python
+Python Starter
+>>>>>>> 3d331659656c89ad480fd8fe1d38503c1752196d
