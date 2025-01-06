@@ -1,0 +1,39 @@
+# Python bytecode
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Django migrations
+*/migrations/
+
+# Environment variables
+.env
+
+# Database
+db.sqlite3
+
+# Static files
+/static/
+
+# Media files
+/media/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Virtual environment
+venv/
+env/
+
+# macOS Finder
+.DS_Store
+
+# Windows thumbnail cache
+Thumbs.db
+
+# VS Code settings
+.settings/
