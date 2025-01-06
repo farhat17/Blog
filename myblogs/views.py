@@ -1,17 +1,23 @@
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib import messages
-# from django.http import HttpResponse
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from .models import Post, Category,Comment
-from .forms import PostForm,CommentForm
+from .models import Post, Category,Comment,Contact
+from .forms import PostForm,CommentForm,ContactForm
 from .models import Post,PostReaction,Profile
 from django.contrib.auth import logout as django_logout 
 from django.contrib.auth.decorators import user_passes_test
 from django.http import JsonResponse
 import re
+import logging
+
+
+
+logger = logging.getLogger(__name__)
+
 def is_superuser(user):
     return user.is_superuser
 
@@ -109,7 +115,6 @@ def create_post(request):
 def edit_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
     
-    # Check if the current user is the author of the post
     if request.user == post.author:
         if request.method == 'POST':
             form = PostForm(request.POST, request.FILES, instance=post)
@@ -142,6 +147,7 @@ def delete_post(request, slug):
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
+    comments = post.comments.all()
     trending_posts = Post.objects.all().order_by('-created_at')[:2]
     categories = Category.objects.all()
     like_count = post.reactions.filter(reaction='like').count()
@@ -149,6 +155,7 @@ def post_detail(request, slug):
     user_reaction = post.reactions.filter(user=request.user).first() if request.user.is_authenticated else None
     author = Profile.objects.all()
     context = {
+        'comments':comments,
         'post': post,
         'like_count': like_count,
         'dislike_count': dislike_count,
@@ -171,9 +178,7 @@ def category_detail(request, slug):
     allcategory = Category.objects.all()
     trending_posts = Post.objects.order_by('-created_at')[:1]
     posts = Post.objects.filter(categories=category)
-    # If there are no posts in the category, avoid querying for recommended posts
     if posts.exists():
-        # Get the IDs of the categories for the current posts
         category_ids = posts.values_list('categories', flat=True)
         # print(category_ids)
 
@@ -207,90 +212,59 @@ def category(request):
 
 def add_comment(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    comments = post.comments.all()  
-    for comment in comments:
-        print(comment)
-
+    comments = post.comments.all()
+    
     if request.method == 'POST':
-        name = request.POST.get('name').strip()
-        email = request.POST.get('email').strip()
-        content = request.POST.get('content').strip()
-        errors = {}
-
-        # Basic Validation
-        if not name:
-            errors['name'] = 'Name is required.'
-        if not email or not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', email):
-            errors['email'] = 'Invalid email address.'
-        if not content:
-            errors['content'] = 'Content is required.'
-        elif len(content) > 500:
-            errors['content'] = 'Content should not exceed 500 characters.'
-
-        # If errors, show them in the form
-        if errors:
-            return render(request, 'post_detail.html', {
-                'post': post,
-                'comments': comments,  # Pass comments to the template
-                'form': {'name': name, 'email': email, 'content': content}, 
-                'errors': errors
-            })
-
-        # Save the comment
-        comment = Comment(name=name, email=email, content=content, post=post)
-        comment.save()
-
-        messages.success(request, 'Your comment has been posted successfully!')
-        
-        return redirect('post_detail', slug=slug)
-
-    # If GET request, no errors, just render the post
-    return render(request, 'post_detail.html', {
-        'post': post,
-        'comments': comments  # Make sure comments are passed here too
-    })
-
-
-# Like/Dislike 
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment_message = Comment(
+                name = form.cleaned_data['name'],
+                email = form.cleaned_data['email'],
+                content = form.cleaned_data['content']
+                # post = post
+                # parent_comment = None
+            )
+            comment_message.save()
+            messages.success(request, 'Your message has been saved successfully!')
+            return redirect('post_detail', slug=slug)
+        else:
+            messages.error(request, 'Error saving comment')
+    else:
+        form = CommentForm()
+        return render(request, 'comment.html', {'post': post, 'comments': comments,'form': form})
+    
+# ======================= Like/Dislike =====================================
 
 def react_to_post(request, slug, reaction_type):
     # Get the post
     post = get_object_or_404(Post, slug=slug)
     
-    # Define valid reactions
     valid_reactions = dict(PostReaction.REACTION_CHOICES).keys()
     if reaction_type not in valid_reactions:
         return redirect('post_detail', slug=post.slug)
     
-    # Check for user session or authenticated user
     session_key = request.session.session_key or request.session.create()
     user = request.user if request.user.is_authenticated else None
 
-    # Check if the user has already reacted to the post
     existing_reaction = PostReaction.objects.filter(post=post, user=user, session_key=session_key).first()
 
     if existing_reaction:
         if existing_reaction.reaction == reaction_type:
-            # Remove reaction if the same reaction is clicked again
             existing_reaction.delete()
             current_reaction = None
         else:
-            # Update to the new reaction
             existing_reaction.reaction = reaction_type
             existing_reaction.save()
             current_reaction = reaction_type
     else:
-        # Create a new reaction
         PostReaction.objects.create(post=post, user=user, session_key=session_key, reaction=reaction_type)
         current_reaction = reaction_type
 
-    # Get updated reaction counts
     reaction_counts = {
         reaction: post.reactions.filter(reaction=reaction).count()
         for reaction in valid_reactions
     }
 
-    # Return updated counts as JSON
     response_data = {
         'like_count': reaction_counts.get('like', 0),
         'dislike_count': reaction_counts.get('dislike', 0),
@@ -339,8 +313,7 @@ def post_list(request):
         return render(request, 'post_list.html',context )
     
     
-#  ===================== Seach ======================================
-
+#  ===================== Seach ====================================
 def search(request):
     query = request.GET.get('search', '')
     if query:
@@ -356,13 +329,34 @@ def no_permission(request):
 
 
 def author_detail(request, username):
-    # Fetch the user and their profile
     author = get_object_or_404(User, username=username)
     
-    # Fetch all posts by the author
     author_posts = Post.objects.filter(author=author)
     
     return render(request, 'about.html', {
-        'post': author_posts.first(),  # Pass the first post for the profile section
-        'author_posts': author_posts,  # All posts by this author
+        'post': author_posts.first(),  
+        'author_posts': author_posts, 
     })
+    
+    
+    
+def contact_us(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            contact_message = Contact(
+                name=form.cleaned_data['name'],
+                email=form.cleaned_data['email'],
+                subject=form.cleaned_data['subject'],
+                message=form.cleaned_data['message']
+            )
+            contact_message.save()
+
+            messages.success(request, 'Your message has been saved successfully!')
+            return redirect('contact')  
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = ContactForm()
+
+    return render(request, 'contact.html', {'form': form})

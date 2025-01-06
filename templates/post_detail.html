@@ -44,22 +44,22 @@
               <hr>
 
               {% if user.is_authenticated %}
-              <div class="p-1 d-flex justify-items-center align-items-center">
-                <a href="{% url 'edit_post' slug=post.slug %}" class="btn btn-sm btn-primary">Edit</a>
-                <a href="{% url 'delete_post' slug=post.slug %}" class="btn btn-sm btn-danger">Delete</a>
+              <div class="p-1 d-flex justify-content-around align-items-center">
+                <a href="{% url 'edit_post' slug=post.slug %}" class="btn btn-sm btn-primary rounded">Edit</a>
+                <a href="{% url 'delete_post' slug=post.slug %}" class="btn btn-sm btn-danger rounded">Delete</a>
               </div>
-              
+
               {% endif %}
               <hr class="mb-4">
               <div class="reaction-buttons d-flex justify-content-center align-items-center">
                 <button class="reaction-btn" id="like-btn" data-reaction="like">
-                  👍 Like <span class="reaction-count" id="like-count">{{ like_count }}</span>
+                  Ã°Å¸â€˜Â Like <span class="reaction-count" id="like-count">{{ like_count }}</span>
                 </button>
                 <button class="reaction-btn" id="dislike-btn" data-reaction="dislike">
-                  👎 Dislike <span class="reaction-count" id="dislike-count">{{ dislike_count }}</span>
+                  Ã°Å¸â€˜Å½ Dislike <span class="reaction-count" id="dislike-count">{{ dislike_count }}</span>
                 </button>
                 <button class="reaction-btn" id="love-btn" data-reaction="love">
-                  ❤️ Love <span class="reaction-count" id="love-count">{{ love_count }}</span>
+                  Ã¢ÂÂ¤Ã¯Â¸Â Love <span class="reaction-count" id="love-count">{{ love_count }}</span>
                 </button>
               </div>
 
@@ -98,59 +98,68 @@
 
               <div class="container">
                 <div class="row">
+                  <div class="card-body">
                     <!-- Comments Section -->
                     <h3>Comments</h3>
                     {% for comment in comments %}
-                        <div class="comment">
-                            <p><strong>{{ comment.name }}</strong> ({{ comment.created_at|date:"F d, Y" }})</p>
-                            <p>{{ comment.content }}</p>
-                        </div>
+                    <div class="comment">
+                      <p><strong>{{ comment.name }}</strong> ({{ comment.created_at|date:"F d, Y" }})</p>
+                      <p>{{ comment.content }}</p>
+                    </div>
                     {% empty %}
-                        <p>No comments yet. Be the first to comment!</p>
+                    <p>No comments yet. Be the first to comment!</p>
                     {% endfor %}
-                    
+                  </div>
+                  <div class="card-body">
                     <!-- Comment Form -->
                     <h3>Leave a comment</h3>
                     <form method="post">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="comment-name">Name:</label>
-                            <input type="text" id="comment-name" name="name" class="form-control" value="{{ form.name|default:'' }}">
-                            {% if errors.name %}
-                                <div class="text-danger">{{ errors.name }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="form-group">
-                            <label for="comment-email">Email:</label>
-                            <input type="email" id="comment-email" name="email" class="form-control" value="{{ form.email|default:'' }}">
-                            {% if errors.email %}
-                                <div class="text-danger">{{ errors.email }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="form-group">
-                            <label for="comment-text">Leave a comment:</label>
-                            <textarea id="comment-text" name="content" class="form-control" rows="3">{{ form.content|default:'' }}</textarea>
-                            <small id="comment-text-help" class="form-text text-muted">Your comment must be between 10 and 500 characters long.</small>
-                            {% if errors.content %}
-                                <div class="text-danger">{{ errors.content }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-            
-                        <!-- Messages Display -->
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }}">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <label for="comment-name">Name:</label>
+                        <input type="text" id="comment-name" name="name" class="form-control"
+                          value="{{ form.name|default:'' }}">
+                        {% if errors.name %}
+                        <div class="text-danger">{{ errors.name }}</div>
                         {% endif %}
+                      </div>
+                      <div class="form-group">
+                        <label for="comment-email">Email:</label>
+                        <input type="email" id="comment-email" name="email" class="form-control"
+                          value="{{ form.email|default:'' }}">
+                        {% if errors.email %}
+                        <div class="text-danger">{{ errors.email }}</div>
+                        {% endif %}
+                      </div>
+                      <div class="form-group">
+                        <label for="comment-text">Leave a comment:</label>
+                        <textarea id="comment-text" name="content" class="form-control"
+                          rows="3">{{ form.content|default:'' }}</textarea>
+                        <small id="comment-text-help" class="form-text text-muted">Your comment must be between 10 and
+                          500
+                          characters long.</small>
+                        {% if errors.content %}
+                        <div class="text-danger">{{ errors.content }}</div>
+                        {% endif %}
+                      </div>
+                      <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </div>
+
+                      <!-- Messages Display -->
+                      {% if messages %}
+                      {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                      </div>
+                      {% endfor %}
+                      {% endif %}
                     </form>
+                  </div>
                 </div>
-            </div>
-            
+              </div>
+
+
 
               <!-- Social Share Buttons -->
               <div class="share-buttons d-flex flex-wrap gap-2 justify-content-center align-items-center mb-4">
@@ -196,17 +205,18 @@
                 <div class="widget">
                   <div class="widget-body">
                     {% if post.author.profile.profile_picture %}
-                    <img loading="lazy" decoding="async" src="{{ post.author.profile.profile_picture.url }}" alt="About Me"
-                      class="w-100 author-thumb-sm d-block">
-                      {% else %}
-                        <img src="default-avatar.jpg" alt="Default Author's Profile Picture" class="author-img" style="width: 50px; height: 50px; border-radius: 50%;">
-                      {% endif %}
+                    <img loading="lazy" decoding="async" src="{{ post.author.profile.profile_picture.url }}"
+                      alt="About Me" class="w-100 author-thumb-sm d-block">
+                    {% else %}
+                    <img src="default-avatar.jpg" alt="Default Author's Profile Picture" class="author-img"
+                      style="width: 50px; height: 50px; border-radius: 50%;">
+                    {% endif %}
                     <h1>{{ post.author|safe }}</h1>
                     <h4>{{ post.author.username }}</h4>
-                   <p>{{ post.author.profile.bio|safe }}</p>
+                    <p>{{ post.author.profile.bio|safe }}</p>
                     <!-- <h2 class="widget-title my-3">{{post.author.name}}</h2> -->
-                    <p class="mb-3 pb-2">{{ post.author.bio|safe }}</p> <a href="{% url 'author_detail' post.author.username %}"
-                      class="btn btn-sm btn-outline-primary">Know
+                    <p class="mb-3 pb-2">{{ post.author.bio|safe }}</p> <a
+                      href="{% url 'author_detail' post.author.username %}" class="btn btn-sm btn-outline-primary">Know
                       More</a>
                   </div>
                 </div>
