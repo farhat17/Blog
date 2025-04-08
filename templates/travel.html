@@ -1,5 +1,7 @@
 {% extends 'layouts/base.html' %}
+
 {% block title %}Travel - Lifestyle Hub{% endblock %}
+
 {% block content %}
 <section class="section py-12 bg-gray-50">
   <div class="container mx-auto px-4">
@@ -10,18 +12,18 @@
 
     <div class="row no-gutters-lg flex flex-wrap -mx-4">
       <div class="col-lg-8 mb-8 lg:mb-0 px-4">
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-2xl font-semibold text-gray-900 mb-4">Top Destinations</h2>
-          <p class="text-gray-600 mb-4">Explore must-visit places around the globe.</p>
-          <img loading="lazy" src="/static/images/destination.jpg" alt="Destination" class="w-full h-64 object-cover rounded-md mb-4">
-          <a href="#" class="text-teal-600 font-medium hover:underline">See More</a>
-        </div>
-        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
-          <h2 class="text-2xl font-semibold text-gray-900 mb-4">Travel Hacks</h2>
-          <p class="text-gray-600 mb-4">Save time and money with our expert tips.</p>
-          <img loading="lazy" src="/static/images/travel-hacks.jpg" alt="Travel Hacks" class="w-full h-64 object-cover rounded-md mb-4">
-          <a href="#" class="text-teal-600 font-medium hover:underline">Learn Hacks</a>
-        </div>
+        {% for section in sections %}
+          <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ section.title }}</h2>
+            <p class="text-gray-600 mb-4">{{ section.description }}</p>
+            {% if section.image %}
+              <img loading="lazy" src="{{ section.image.url }}" alt="{{ section.title }}" class="w-full h-64 object-cover rounded-md mb-4">
+            {% endif %}
+            <a href="{{ section.link }}" class="text-teal-600 font-medium hover:underline">Read More</a>
+          </div>
+        {% empty %}
+          <p>No travel sections available at the moment.</p>
+        {% endfor %}
       </div>
 
       <div class="col-lg-4 px-4">

@@ -364,7 +364,7 @@ def contact_us(request):
 def lifestyle_home(request):
     """Homepage displaying featured sections."""
     categories = Category.objects.all()
-    featured_sections = LifestyleSection.objects.filter(is_featured=True)[:4]  # Limit to 4 for homepage
+    featured_sections = LifestyleSection.objects.filter(is_featured=True)[:4] 
     context = {
         'categories': categories,
         'featured_sections': featured_sections,
@@ -393,6 +393,7 @@ def travel(request):
         'sections': sections,
     }
     return render(request, 'travel.html', context)
+
 
 def fashion(request):
     """Fashion page with related sections."""
