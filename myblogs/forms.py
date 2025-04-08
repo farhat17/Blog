@@ -19,7 +19,7 @@ class PostForm(forms.ModelForm):
                 'aria-label': 'Post Content'
             }),
             'categories': forms.CheckboxSelectMultiple(attrs={
-                'class': 'form-check-input',
+                'class': 'form-check form-check-inline',  
                 'aria-label': 'Post Categories'
             }),
             'image': forms.ClearableFileInput(attrs={

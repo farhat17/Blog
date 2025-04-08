@@ -1,32 +1,245 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
 
-
-
-<section class="" hero-text-light py-5>
-    <div class="container">
-        <h2>{{ form.instance.pk|default:"Create" }} Post</h2>
-        <form method="post" enctype="multipart/form-data" class="bg-white p-4 rounded shadow-sm">
+<section class="form-container">
+    <div class="form-wrapper">
+        <h2 class="form-title">
+            {% if form.instance.pk %}Edit Post{% else %}Create a New Post{% endif %}
+        </h2>
+        
+        <form method="post" enctype="multipart/form-data" class="form-content">
             {% csrf_token %}
-            <div class="form-group mb-4">
-                <label for="{{ form.title.id_for_label }}">Title:</label>
-                {{ form.title }}
-            </div><br>
-            <div class="form-group mb-4">
-                <label for="{{ form.content.id_for_label }}">Content:</label>
-                {{ form.content }}
-            </div><br>
-            <div class="form-group mb-4">
-                <label for="{{ form.categories.id_for_label }}">Categories:</label>
-                {{ form.categories }}
-            </div><br><br><br>
-            <div class="form-group mt-6 mb-4">
-                <label for="{{ form.image.id_for_label }}">Image:</label>
-                {{ form.image }}
-            </div><br>
-            <button type="submit" class="btn btn-primary">Save</button>
+            
+            <!-- Title Field -->
+            <div class="form-group">
+                <label for="{{ form.title.id_for_label }}" class="form-label">
+                    Title
+                </label>
+                <div class="form-input">
+                    {{ form.title }}
+                </div>
+            </div>
+
+            <!-- Content Field -->
+            <div class="form-group">
+                <label for="{{ form.content.id_for_label }}" class="form-label">
+                    Content
+                </label>
+                <div class="form-input">
+                    {{ form.content }}
+                </div>
+            </div>
+
+            <!-- Categories Field -->
+            <div class="form-group">
+                <label for="{{ form.categories.id_for_label }}" class="form-label">
+                    Categories
+                </label>
+                <div class="form-input">
+                    {{ form.categories }}
+                </div>
+                {% if form.categories.errors %}
+                    <p class="form-error">{{ form.categories.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Image Upload Field -->
+            <div class="form-group upload-container">
+                <label class="form-label">
+                    Featured Image
+                </label>
+                <div class="upload-area">
+                    <div class="upload-icon">
+                        <svg class="upload-svg" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+                            <path d="M12 5v14m-7-7h14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="upload-text">
+                        <label for="image-upload" class="upload-label">
+                            <span>Upload a file</span>
+                            {{ form.image }}
+                        </label>
+                        <p class="upload-prompt">or drag and drop</p>
+                    </div>
+                    <p class="upload-note">PNG, JPG up to 2MB</p>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="submit-container">
+                <button type="submit" class="submit-button">
+                    Save Post
+                </button>
+            </div>
         </form>
     </div>
 </section>
+
+<style>
+    /* General container and form styling */
+    .form-container {
+        padding: 3rem 1rem;
+        background-color: #f9fafb;
+    }
+    
+    .form-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .form-title {
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+        color: #1f2937;
+        margin-bottom: 2rem;
+    }
+
+    /* Form styling */
+    .form-content {
+        background-color: #fff;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 2.5rem; /* Increased spacing */
+    }
+
+    .form-label {
+        display: block;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.75rem;
+    }
+
+    /* Input fields styling */
+    .form-input input,
+    .form-input textarea,
+    .form-input select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        background-color: #fff;
+        transition: border-color 0.2s;
+    }
+
+    .form-input input:focus,
+    .form-input textarea:focus,
+    .form-input select:focus {
+        border-color: #6366f1;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .form-input textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .form-input select[multiple] {
+        height: 120px;
+        padding: 0.5rem;
+        margin-bottom: 1rem; /* Added spacing below categories */
+    }
+
+    .form-error {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Image upload container */
+    .upload-area {
+        border: 2px dashed #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 2rem 1rem;
+        text-align: center;
+        margin-top: 1rem; /* Increased top margin */
+        transition: border-color 0.2s;
+    }
+
+    .upload-area:hover {
+        border-color: #6366f1;
+    }
+
+    .upload-icon {
+        margin-bottom: 1rem;
+    }
+
+    .upload-svg {
+        width: 2.5rem;
+        height: 2.5rem;
+        color: #9ca3af;
+    }
+
+    .upload-text {
+        font-size: 0.95rem;
+        color: #4b5563;
+        margin-bottom: 0.5rem;
+    }
+
+    .upload-label {
+        cursor: pointer;
+        color: #6366f1;
+        font-weight: 500;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        transition: all 0.2s;
+    }
+
+    .upload-label:hover {
+        background-color: rgba(99, 102, 241, 0.1);
+    }
+
+    .upload-note {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+    }
+
+    /* Submit button */
+    .submit-container {
+        margin-top: 2rem;
+        text-align: right;
+    }
+
+    .submit-button {
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #fff;
+        background-color: #6366f1;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .submit-button:hover {
+        background-color: #4f46e5;
+    }
+
+    @media (max-width: 640px) {
+        .form-content {
+            padding: 1.5rem;
+        }
+        
+        .form-title {
+            font-size: 1.75rem;
+        }
+        
+        .submit-container {
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 2rem;
+        }
+    }
+</style>
 
 {% endblock %}

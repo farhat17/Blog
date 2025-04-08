@@ -1,0 +1,29 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Subscribe - Lifestyle Hub{% endblock %}
+{% block content %}
+<section class="section py-12 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="max-w-md mx-auto text-center">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Join Our Community</h1>
+      <p class="text-lg text-gray-600 mb-8">Subscribe to get the latest lifestyle tips and updates delivered to your inbox.</p>
+
+      {% if messages %}
+      <div class="mb-6">
+        {% for message in messages %}
+        <div class="p-4 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form action="{% url 'subscribe' %}" method="POST" class="space-y-4">
+        {% csrf_token %}
+        <input type="email" name="email" placeholder="Enter your email" class="w-full p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none" required>
+        <button type="submit" class="w-full bg-teal-600 text-white px-4 py-3 rounded-md hover:bg-teal-700 transition duration-300">Subscribe Now</button>
+      </form>
+      <p class="mt-4 text-gray-500 text-sm">We respect your privacy and won’t share your email.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

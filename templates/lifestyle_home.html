@@ -1,0 +1,107 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<section class="section py-12 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <!-- Hero Section -->
+    <div class="mb-12 bg-gradient-to-r from-teal-500 to-indigo-600 text-white rounded-xl shadow-lg p-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Live Your Best Life</h1>
+      <p class="text-lg md:text-xl max-w-2xl mx-auto">Explore expert tips, trends, and inspiration for wellness, travel, fashion, and home living.</p>
+      <a href="#explore" class="mt-6 inline-block bg-white text-teal-600 px-6 py-3 rounded-full font-semibold hover:bg-teal-100 transition duration-300">Get Inspired</a>
+    </div>
+
+    <div class="row no-gutters-lg flex flex-wrap -mx-4" id="explore">
+      <!-- Main Content -->
+      <div class="col-lg-8 mb-8 lg:mb-0 px-4">
+        <!-- Featured Lifestyle Sections -->
+        <div class="space-y-12">
+          <!-- Wellness -->
+          <div class="bg-white rounded-lg shadow-md p-6 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2">
+              <img loading="lazy" decoding="async" src="/static/images/wellness.jpg" alt="Wellness" class="w-full h-64 object-cover rounded-md">
+            </div>
+            <div class="md:w-1/2 md:pl-6 mt-4 md:mt-0">
+              <h2 class="text-2xl font-semibold text-gray-900 mb-3">Wellness & Self-Care</h2>
+              <p class="text-gray-600 mb-4">Discover mindfulness practices, healthy recipes, and fitness tips to nurture your body and soul.</p>
+              <a href="{% url 'wellness' %}" class="text-teal-600 font-medium hover:underline">Explore Wellness</a>
+            </div>
+          </div>
+
+          <!-- Travel -->
+          <div class="bg-white rounded-lg shadow-md p-6 flex flex-col md:flex-row-reverse items-center">
+            <div class="md:w-1/2">
+              <img loading="lazy" decoding="async" src="/static/images/travel.jpg" alt="Travel" class="w-full h-64 object-cover rounded-md">
+            </div>
+            <div class="md:w-1/2 md:pr-6 mt-4 md:mt-0">
+              <h2 class="text-2xl font-semibold text-gray-900 mb-3">Travel & Adventure</h2>
+              <p class="text-gray-600 mb-4">Plan your next getaway with destination guides, travel hacks, and stunning itineraries.</p>
+              <a href="{% url 'travel' %}" class="text-teal-600 font-medium hover:underline">Discover Travel</a>
+            </div>
+          </div>
+
+          <!-- Fashion -->
+          <div class="bg-white rounded-lg shadow-md p-6 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2">
+              <img loading="lazy" decoding="async" src="/static/images/fashion.jpg" alt="Fashion" class="w-full h-64 object-cover rounded-md">
+            </div>
+            <div class="md:w-1/2 md:pl-6 mt-4 md:mt-0">
+              <h2 class="text-2xl font-semibold text-gray-900 mb-3">Fashion & Style</h2>
+              <p class="text-gray-600 mb-4">Stay ahead of trends with outfit ideas, sustainable fashion tips, and seasonal must-haves.</p>
+              <a href="{% url 'fashion' %}" class="text-teal-600 font-medium hover:underline">Explore Fashion</a>
+            </div>
+          </div>
+
+          <!-- Home Living -->
+          <div class="bg-white rounded-lg shadow-md p-6 flex flex-col md:flex-row-reverse items-center">
+            <div class="md:w-1/2">
+              <img loading="lazy" decoding="async" src="/static/images/home-living.jpg" alt="Home Living" class="w-full h-64 object-cover rounded-md">
+            </div>
+            <div class="md:w-1/2 md:pr-6 mt-4 md:mt-0">
+              <h2 class="text-2xl font-semibold text-gray-900 mb-3">Home Living</h2>
+              <p class="text-gray-600 mb-4">Transform your space with decor ideas, organization tips, and cozy home essentials.</p>
+              <a href="{% url 'home_living' %}" class="text-teal-600 font-medium hover:underline">Discover Home Living</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-lg-4 px-4">
+        <div class="widget-blocks space-y-8">
+          <!-- Newsletter Signup -->
+          <div class="widget bg-teal-50 rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Stay Inspired</h2>
+            <p class="text-gray-600 mb-4">Subscribe to our newsletter for the latest lifestyle tips and exclusive offers.</p>
+            <form action="{% url 'subscribe' %}" method="POST" class="space-y-4">
+              {% csrf_token %}
+              <input type="email" name="email" placeholder="Enter your email" class="w-full p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:outline-none" required>
+              <button type="submit" class="w-full bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-700 transition duration-300">Subscribe</button>
+            </form>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="widget bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">Explore More</h2>
+            <ul class="space-y-3">
+              <li><a href="{% url 'wellness' %}" class="text-teal-600 hover:underline">Wellness Tips</a></li>
+              <li><a href="{% url 'travel' %}" class="text-teal-600 hover:underline">Travel Guides</a></li>
+              <li><a href="{% url 'fashion' %}" class="text-teal-600 hover:underline">Fashion Trends</a></li>
+              <li><a href="{% url 'home_living' %}" class="text-teal-600 hover:underline">Home Decor</a></li>
+            </ul>
+          </div>
+
+          <!-- Social Media -->
+          <div class="widget bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">Connect With Us</h2>
+            <div class="flex gap-4">
+              <a href="https://facebook.com" target="_blank" class="text-teal-600 hover:text-teal-800"><i class="fab fa-facebook-f text-2xl"></i></a>
+              <a href="https://instagram.com" target="_blank" class="text-teal-600 hover:text-teal-800"><i class="fab fa-instagram text-2xl"></i></a>
+              <a href="https://twitter.com" target="_blank" class="text-teal-600 hover:text-teal-800"><i class="fab fa-twitter text-2xl"></i></a>
+              <a href="https://pinterest.com" target="_blank" class="text-teal-600 hover:text-teal-800"><i class="fab fa-pinterest-p text-2xl"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

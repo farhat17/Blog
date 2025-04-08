@@ -109,3 +109,24 @@ class Contact(models.Model):
 
     def __str__(self):
         return f"Message from {self.name} ({self.email})"
+
+
+class LifestyleSection(models.Model):
+    """Content sections for each lifestyle category."""
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="sections")
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True)
+    description = models.TextField()
+    image = models.ImageField(upload_to='lifestyle_images/', blank=True, null=True, help_text="Optional image for the section")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_featured = models.BooleanField(default=False, help_text="Feature this section on the homepage")
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+    
+
+

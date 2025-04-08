@@ -20,4 +20,11 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('author/<str:username>/', views.author_detail, name='author_detail'),
     path('no_permission/', views.no_permission, name='no_permission'),
+    path('lifestyle/', views.lifestyle_home, name='lifestyle_home'),
+    path('wellness/', views.wellness, name='wellness'),
+    path('travel/', views.travel, name='travel'),
+    path('fashion/', views.fashion, name='fashion'),
+    path('home-living/', views.home_living, name='home_living'),
+    path('subscribe/', views.subscribe, name='subscribe'),
+    path('section/<slug:slug>/', views.section_detail, name='section_detail'),
 ]

@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.http import JsonResponse
 import re
 import logging
-
+from .models import LifestyleSection
 
 
 logger = logging.getLogger(__name__)
@@ -360,3 +360,82 @@ def contact_us(request):
         form = ContactForm()
 
     return render(request, 'contact.html', {'form': form})
+
+def lifestyle_home(request):
+    """Homepage displaying featured sections."""
+    categories = Category.objects.all()
+    featured_sections = LifestyleSection.objects.filter(is_featured=True)[:4]  # Limit to 4 for homepage
+    context = {
+        'categories': categories,
+        'featured_sections': featured_sections,
+    }
+    return render(request, 'lifestyle_home.html', context)
+
+
+def wellness(request):
+    """Wellness page with related sections."""
+    category = Category.objects.get(slug='wellness')
+    sections = LifestyleSection.objects.filter(category=category)
+    context = {
+        'title': category.name,
+        'description': category.description,
+        'sections': sections,
+    }
+    return render(request, 'wellness.html', context)
+
+def travel(request):
+    """Travel page with related sections."""
+    category = Category.objects.get(slug='travel')
+    sections = LifestyleSection.objects.filter(category=category)
+    context = {
+        'title': category.name,
+        'description': category.description,
+        'sections': sections,
+    }
+    return render(request, 'travel.html', context)
+
+def fashion(request):
+    """Fashion page with related sections."""
+    category = Category.objects.get(slug='fashion')
+    sections = LifestyleSection.objects.filter(category=category)
+    context = {
+        'title': category.name,
+        'description': category.description,
+        'sections': sections,
+    }
+    return render(request, 'fashion.html', context)
+
+def home_living(request):
+    """Home Living page with related sections."""
+    category = Category.objects.get(slug='home-living')
+    sections = LifestyleSection.objects.filter(category=category)
+    context = {
+        'title': category.name,
+        'description': category.description,
+        'sections': sections,
+    }
+    return render(request, 'home_living.html', context)
+
+def subscribe(request):
+    """Handle newsletter subscription."""
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        if email:
+            # Check if email already exists
+            if not Subscriber.objects.filter(email=email).exists():
+                Subscriber.objects.create(email=email)
+                messages.success(request, f'Thank you for subscribing with {email}!')
+            else:
+                messages.info(request, 'You are already subscribed!')
+        else:
+            messages.error(request, 'Please provide a valid email address.')
+        return redirect('subscribe')
+    return render(request, 'subscribe.html')
+
+def section_detail(request, slug):
+    """Detail page for a specific lifestyle section."""
+    section = LifestyleSection.objects.get(slug=slug)
+    context = {
+        'section': section,
+    }
+    return render(request, 'section_detail.html', context)

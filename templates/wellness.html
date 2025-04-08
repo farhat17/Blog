@@ -1,0 +1,50 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Wellness - Lifestyle Hub{% endblock %}
+{% block content %}
+<section class="section py-12 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="mb-12 text-center">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ title }}</h1>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">{{ description }}</p>
+    </div>
+
+    <div class="row no-gutters-lg flex flex-wrap -mx-4">
+      <div class="col-lg-8 mb-8 lg:mb-0 px-4">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-2xl font-semibold text-gray-900 mb-4">Mindfulness Practices</h2>
+          <p class="text-gray-600 mb-4">Learn meditation techniques to reduce stress and improve focus.</p>
+          <img loading="lazy" src="/static/images/meditation.jpg" alt="Meditation" class="w-full h-64 object-cover rounded-md mb-4">
+          <a href="#" class="text-teal-600 font-medium hover:underline">Read More</a>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+          <h2 class="text-2xl font-semibold text-gray-900 mb-4">Healthy Recipes</h2>
+          <p class="text-gray-600 mb-4">Try our nutrient-packed recipes for a balanced diet.</p>
+          <img loading="lazy" src="/static/images/healthy-food.jpg" alt="Healthy Food" class="w-full h-64 object-cover rounded-md mb-4">
+          <a href="#" class="text-teal-600 font-medium hover:underline">Get Recipes</a>
+        </div>
+      </div>
+
+      <div class="col-lg-4 px-4">
+        <div class="widget-blocks space-y-8">
+          <div class="widget bg-teal-50 rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Stay Updated</h2>
+            <form action="{% url 'subscribe' %}" method="POST" class="space-y-4">
+              {% csrf_token %}
+              <input type="email" name="email" placeholder="Your email" class="w-full p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-teal-500" required>
+              <button type="submit" class="w-full bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-700">Subscribe</button>
+            </form>
+          </div>
+          <div class="widget bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">Quick Links</h2>
+            <ul class="space-y-3">
+              <li><a href="{% url 'travel' %}" class="text-teal-600 hover:underline">Travel</a></li>
+              <li><a href="{% url 'fashion' %}" class="text-teal-600 hover:underline">Fashion</a></li>
+              <li><a href="{% url 'home_living' %}" class="text-teal-600 hover:underline">Home Living</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
