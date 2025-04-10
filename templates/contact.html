@@ -87,7 +87,7 @@
             {% endfor %}
         </ul>
         {% endif %}
-        <form method="post" id="contact-form" role="form" action="{% url 'contact' %}">
+        <form method="post" id="contact-form" role="form" action="{% url 'contact_us' %}">
             {% csrf_token %}
             <div class="form-group mb-4">
                 <input type="text" placeholder="Your Name" class="form-control" name="name" id="name" required />

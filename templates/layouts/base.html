@@ -53,8 +53,8 @@
     <div class="container">
       <nav class="navbar navbar-expand-lg navbar-light px-0">
         <a class="navbar-brand order-1 py-0" href="{% url 'index' %}">
-          <img loading="prelaod" decoding="async" class="img-fluid" src="{% static 'images/logo.webp'%}"
-            alt="Putaraub.com" />
+          <img loading="prelaod" decoding="async" class="img-fluid" src=""
+            />PitaraHub
         </a>
         <div class="navbar-actions order-3 ml-0 ml-md-4">
           <button aria-label="navbar toggler" class="navbar-toggler border-0" type="button" data-toggle="collapse"
@@ -71,19 +71,20 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'index' %}">Home</a>
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
+            <li class="nav-item dropdown {% if category.slug == 'travel' %} active {% endif %}">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Articles
               </a>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="{% url 'travel' %}">Travel</a>
-                <a class="dropdown-item" href="{% url 'fashion' %}">Lifestyle</a>
-                <!-- <a class="dropdown-item" href="travel.html">Cruises</a> -->
+                <a class="dropdown-item" href="{% url 'category_detail' 'travel' %}">Travel</a>
+                <a class="dropdown-item" href="{% url 'category_detail' 'fashion' %}">Lifestyle</a>
+                <a class="dropdown-item" href="{% url 'category_detail' 'home-living' %}">Home Living</a>
+
               </div>
             </li>
+            
             <li class="nav-item">
-              <a class="nav-link" href="#">Contact</a>
+              <a class="nav-link" href="{% url 'contact' %}">Contact</a>
             </li>
             {% if user.is_authenticated %}
             <li class="nav-item">

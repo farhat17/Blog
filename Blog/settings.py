@@ -169,3 +169,31 @@ TINYMCE_DEFAULT_CONFIG = {
     ''',
     'content_css': '/path/to/your/custom.css', 
 }
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,  # Don't disable existing loggers
+
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',  # Capture all levels from DEBUG and above
+            'class': 'logging.FileHandler',
+            'filename': 'django_output.log',  # Path to the log file for regular output logs
+        },
+        'error_file': {
+            'level': 'ERROR',  # Capture only ERROR and CRITICAL logs
+            'class': 'logging.FileHandler',
+            'filename': 'django_error.log',  # Path to the log file for error logs
+        },
+    },
+
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'error_file'],  # Send logs to both files
+            'level': 'DEBUG',  # Capture all logs from DEBUG and above
+            'propagate': True,
+        },
+    },
+}

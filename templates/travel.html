@@ -19,7 +19,7 @@
             {% if section.image %}
               <img loading="lazy" src="{{ section.image.url }}" alt="{{ section.title }}" class="w-full h-64 object-cover rounded-md mb-4">
             {% endif %}
-            <a href="{{ section.link }}" class="text-teal-600 font-medium hover:underline">Read More</a>
+            <a href="{% url 'post_detail' section.slug %}" class="text-teal-600 font-medium hover:underline">Read More</a>
           </div>
         {% empty %}
           <p>No travel sections available at the moment.</p>

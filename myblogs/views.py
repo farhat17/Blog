@@ -353,7 +353,7 @@ def contact_us(request):
             contact_message.save()
 
             messages.success(request, 'Your message has been saved successfully!')
-            return redirect('contact')  
+            return redirect('contact_us')  
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
@@ -371,67 +371,79 @@ def lifestyle_home(request):
     }
     return render(request, 'lifestyle_home.html', context)
 
-
-def wellness(request):
-    """Wellness page with related sections."""
-    category = Category.objects.get(slug='wellness')
+def category_page(request, category_slug):
+    """Dynamic category page handler"""
+    category = get_object_or_404(Category, slug=category_slug)
     sections = LifestyleSection.objects.filter(category=category)
+    all_categories = Category.objects.all()
+    
     context = {
-        'title': category.name,
-        'description': category.description,
+        'category': category,
         'sections': sections,
-    }
-    return render(request, 'wellness.html', context)
-
-def travel(request):
-    """Travel page with related sections."""
-    category = Category.objects.get(slug='travel')
-    sections = LifestyleSection.objects.filter(category=category)
-    context = {
-        'title': category.name,
-        'description': category.description,
-        'sections': sections,
+        'all_categories': all_categories,
     }
     return render(request, 'travel.html', context)
 
+# def wellness(request):
+#     """Wellness page with related sections."""
+#     category = Category.objects.get(slug='wellness')
+#     sections = LifestyleSection.objects.filter(category=category)
+#     context = {
+#         'title': category.name,
+#         'description': category.description,
+#         'sections': sections,
+#     }
+#     return render(request, 'wellness.html', context)
 
-def fashion(request):
-    """Fashion page with related sections."""
-    category = Category.objects.get(slug='fashion')
-    sections = LifestyleSection.objects.filter(category=category)
-    context = {
-        'title': category.name,
-        'description': category.description,
-        'sections': sections,
-    }
-    return render(request, 'fashion.html', context)
+# def travel(request):
+#     """Travel page with related sections."""
+#     category = Category.objects.get(slug='travel')
+#     sections = LifestyleSection.objects.filter(category=category)
+#     context = {
+#         'title': category.name,
+#         'description': category.description,
+#         'sections': sections,
+#     }
+#     return render(request, 'travel.html', context)
 
-def home_living(request):
-    """Home Living page with related sections."""
-    category = Category.objects.get(slug='home-living')
-    sections = LifestyleSection.objects.filter(category=category)
-    context = {
-        'title': category.name,
-        'description': category.description,
-        'sections': sections,
-    }
-    return render(request, 'home_living.html', context)
 
-def subscribe(request):
-    """Handle newsletter subscription."""
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        if email:
-            # Check if email already exists
-            if not Subscriber.objects.filter(email=email).exists():
-                Subscriber.objects.create(email=email)
-                messages.success(request, f'Thank you for subscribing with {email}!')
-            else:
-                messages.info(request, 'You are already subscribed!')
-        else:
-            messages.error(request, 'Please provide a valid email address.')
-        return redirect('subscribe')
-    return render(request, 'subscribe.html')
+# def fashion(request):
+#     """Fashion page with related sections."""
+#     category = Category.objects.get(slug='fashion')
+#     sections = LifestyleSection.objects.filter(category=category)
+#     context = {
+#         'title': category.name,
+#         'description': category.description,
+#         'sections': sections,
+#     }
+#     return render(request, 'fashion.html', context)
+
+# def home_living(request):
+#     """Home Living page with related sections."""
+#     category = Category.objects.get(slug='home-living')
+#     sections = LifestyleSection.objects.filter(category=category)
+#     context = {
+#         'title': category.name,
+#         'description': category.description,
+#         'sections': sections,
+#     }
+#     return render(request, 'home_living.html', context)
+
+# def subscribe(request):
+#     """Handle newsletter subscription."""
+#     if request.method == 'POST':
+#         email = request.POST.get('email')
+#         if email:
+#             # Check if email already exists
+#             if not Subscriber.objects.filter(email=email).exists():
+#                 Subscriber.objects.create(email=email)
+#                 messages.success(request, f'Thank you for subscribing with {email}!')
+#             else:
+#                 messages.info(request, 'You are already subscribed!')
+#         else:
+#             messages.error(request, 'Please provide a valid email address.')
+#         return redirect('subscribe')
+#     return render(request, 'subscribe.html')
 
 def section_detail(request, slug):
     """Detail page for a specific lifestyle section."""

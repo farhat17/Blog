@@ -33,11 +33,11 @@
                     </li>
 
                   </ul>
-                  <h2><a class="post-title" href="article.html">Is It Ethical to Travel Now? With That Freedom Comes
+                  <h2><a class="post-title" href="{% url 'post_detail' post.slug %}">Is It Ethical to Travel Now? With That Freedom Comes
                       Responsibility.</a></h2>
                   <p class="card-text">Heading Here is example of hedings. You can use this heading by following
                     markdownify rules. For example: use # for …</p>
-                  <div class="content"> <a class="read-more-btn" href="">Read Full
+                  <div class="content"> <a class="read-more-btn" href="{% url 'post_detail' post.slug %}">Read Full
                       Article</a>
                   </div>
                 </div>
