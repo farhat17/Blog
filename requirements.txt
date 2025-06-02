@@ -1,6 +1,5 @@
 Django==4.2.4
 djangorestframework==3.3.2
-mysqlclient==2.2.1 or mysql-connector-python==8.4.0 (keep only one)
 django-crispy-forms==2.3
 django-tinymce==4.1.0
 python-telegram-bot==3.2.0
